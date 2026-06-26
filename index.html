@@ -828,8 +828,12 @@ async function _doClean(prompt){
     if(!res.ok){const e=await res.json();throw new Error(e.error?.message||'HTTP '+res.status);}
     const data=await res.json();
     const reply=data.choices[0].message.content;
+    // デバッグ
+    const replyStr = typeof reply === 'string' ? reply : JSON.stringify(reply);
+    console.log('GPT reply:', replyStr.substring(0,500));
+    alert('GPTレスポンス確認\ntype: '+typeof reply+'\n---\n'+replyStr.substring(0,300));
     const url=extractImg(reply);
-    if(!url) throw new Error('クリーン画像を取得できませんでした。');
+    if(!url) throw new Error('クリーン画像を取得できませんでした。\n返答: '+replyStr.substring(0,200));
     // base64に変換して保存
     if(url.startsWith('data:')){
       S.cleanB64=url.split(',')[1];
