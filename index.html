@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>復習プリントメーカー</title>
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
-
 <style>
 :root {
   --teal:    #35C8D4;
@@ -17,23 +16,15 @@
   --text:    #1A2B30;
   --muted:   #2A6080;
   --border:  #C8EBF2;
+  --green:   #2BBF80;
+  --amber:   #E8A020;
 }
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-body {
-  font-family:'Zen Maru Gothic','Hiragino Sans',sans-serif;
-  background:var(--teal); min-height:100vh; color:var(--text);
-}
+body { font-family:'Zen Maru Gothic','Hiragino Sans',sans-serif; background:var(--teal); min-height:100vh; color:var(--text); }
 
 /* ヘッダー */
-.app-header {
-  background:var(--teal);
-  padding:52px 20px 28px;
-  text-align:center;
-}
-.app-header .logo-icon { margin-bottom:8px; }
-.app-header h1 {
-  font-size:26px; font-weight:700; color:white; letter-spacing:-.3px;
-}
+.app-header { background:var(--teal); padding:52px 20px 28px; text-align:center; position:relative; }
+.app-header h1 { font-size:26px; font-weight:700; color:white; letter-spacing:-.3px; }
 
 /* シェブロン */
 .chevron-top    { width:100%; height:36px; background:var(--white); clip-path:polygon(0 0,100% 0,50% 100%); }
@@ -43,59 +34,39 @@ body {
 
 /* カード */
 .card { background:var(--white); padding:20px; margin-bottom:2px; }
-.card-label {
-  font-size:19px; font-weight:700; letter-spacing:1.5px;
-  color:var(--muted); text-transform:uppercase; margin-bottom:12px;
-  display:flex; align-items:center; gap:6px;
-}
+.card-label { font-size:19px; font-weight:700; letter-spacing:1.5px; color:var(--muted); text-transform:uppercase; margin-bottom:12px; display:flex; align-items:center; gap:6px; }
+.sep { height:1px; background:#EEF2F3; margin:0 20px; }
 
-/* APIキー */
-.key-row { display:flex; gap:8px; align-items:center; }
-.key-row input {
-  flex:1; min-width:0; border:1.5px solid var(--border); border-radius:99px;
-  padding:12px 16px; font-size:17px; outline:none;
-  font-family:'Zen Maru Gothic',sans-serif; background:var(--gray); color:var(--text);
-}
-.key-row input:focus { border-color:var(--teal); background:white; }
-.api-status { font-size:15px; margin-top:6px; min-height:16px; color:var(--teal); }
-.api-note   { font-size:15px; color:#2A6080; margin-top:4px; line-height:1.6; }
+/* ステップインジケーター */
+.step-indicator { display:flex; align-items:center; justify-content:center; gap:0; padding:16px 20px; background:var(--white); }
+.step-dot { width:28px; height:28px; border-radius:50%; background:var(--gray); color:var(--muted); font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; transition:all .2s; }
+.step-dot.active { background:var(--teal); color:white; }
+.step-dot.done { background:var(--green); color:white; }
+.step-line { flex:1; height:2px; background:var(--border); max-width:40px; }
+.step-line.done { background:var(--green); }
 
-/* タブ */
-.tabs {
-  display:flex; background:var(--white);
-  padding:0 20px; border-bottom:1px solid #EEF2F3;
-}
-.tab {
-  flex:1; padding:13px 0; font-size:19px; font-weight:700;
-  text-align:center; color:var(--muted); cursor:pointer;
-  border-bottom:3px solid transparent; transition:all .2s;
-  background:none; border-top:none; border-left:none; border-right:none;
-  font-family:'Zen Maru Gothic',sans-serif;
-  display:flex; align-items:center; justify-content:center; gap:5px;
-}
-.tab.active { color:var(--teal); border-bottom-color:var(--teal); }
-.tab.done   { color:#2A6080; border-bottom-color:#2A6080; }
+/* モード選択 */
+.mode-cards { display:flex; flex-direction:column; gap:12px; }
+.mode-card { border:2px solid var(--border); border-radius:16px; padding:18px; cursor:pointer; transition:all .2s; background:var(--gray); }
+.mode-card.selected { border-color:var(--teal); background:#EDF8FA; }
+.mode-card h3 { font-size:17px; font-weight:700; color:var(--text); margin-bottom:4px; display:flex; align-items:center; gap:8px; }
+.mode-card p { font-size:15px; color:var(--muted); line-height:1.6; }
+.mode-radio { width:20px; height:20px; border-radius:50%; border:2px solid var(--border); background:white; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+.mode-radio.checked { border-color:var(--teal); }
+.mode-radio.checked::after { content:''; width:10px; height:10px; border-radius:50%; background:var(--teal); }
 
 /* アップロード */
-.upload-area {
-  border:2px dashed var(--border); border-radius:16px;
-  padding:28px 12px; text-align:center; cursor:pointer;
-  position:relative; transition:all .2s; background:var(--gray);
-  display:flex; flex-direction:column; align-items:center; gap:8px;
-}
+.upload-area { border:2px dashed var(--border); border-radius:16px; padding:28px 12px; text-align:center; cursor:pointer; position:relative; transition:all .2s; background:var(--gray); display:flex; flex-direction:column; align-items:center; gap:8px; }
 .upload-area.has { border-color:var(--teal); border-style:solid; background:#EDF8FA; }
 .upload-area input { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
 .upload-area .upload-lbl { font-size:16px; color:var(--muted); font-weight:500; }
 
 /* クロップ */
-.crop-container {
-  display:none; position:relative; background:#000;
-  border-radius:14px; margin-top:12px; overflow:hidden; touch-action:none;
-}
+.crop-container { display:none; position:relative; background:#000; border-radius:14px; margin-top:12px; overflow:hidden; touch-action:none; }
 .crop-container img { display:block; width:100%; pointer-events:none; user-select:none; }
-.mask        { position:absolute; background:rgba(0,0,0,.5); pointer-events:none; }
+.mask { position:absolute; background:rgba(0,0,0,.5); pointer-events:none; }
 .crop-border { position:absolute; border:2px solid white; pointer-events:none; border-radius:2px; }
-.grid-line   { position:absolute; background:rgba(255,255,255,.3); pointer-events:none; }
+.grid-line { position:absolute; background:rgba(255,255,255,.3); pointer-events:none; }
 .handle { position:absolute; width:44px; height:44px; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:10; }
 .handle::after { content:''; display:block; background:transparent; }
 .handle.tl::after { width:20px;height:20px; border-top:3px solid white; border-left:3px solid white; border-radius:3px 0 0 0; }
@@ -104,435 +75,208 @@ body {
 .handle.br::after { width:20px;height:20px; border-bottom:3px solid white; border-right:3px solid white; border-radius:0 0 3px 0; }
 .handle.tm::after,.handle.bm::after { width:24px;height:3px;border-radius:2px;background:white; }
 .handle.lm::after,.handle.rm::after { width:3px;height:24px;border-radius:2px;background:white; }
-
 .crop-btns { display:flex; gap:10px; margin-top:10px; }
-.btn-crop-cancel {
-  flex:1; background:#EEF3F4; color:var(--muted); border:none;
-  border-radius:99px; padding:12px; font-size:16px; font-weight:700;
-  cursor:pointer; font-family:'Zen Maru Gothic',sans-serif;
-  display:flex; align-items:center; justify-content:center; gap:5px;
-}
-.btn-crop-ok {
-  flex:2; background:var(--orange); color:white; border:none;
-  border-radius:99px; padding:12px; font-size:16px; font-weight:700;
-  cursor:pointer; font-family:'Zen Maru Gothic',sans-serif;
-  display:flex; align-items:center; justify-content:center; gap:5px;
-}
+.btn-crop-cancel { flex:1; background:#EEF3F4; color:var(--muted); border:none; border-radius:99px; padding:12px; font-size:16px; font-weight:700; cursor:pointer; font-family:'Zen Maru Gothic',sans-serif; display:flex; align-items:center; justify-content:center; gap:5px; }
+.btn-crop-ok { flex:2; background:var(--orange); color:white; border:none; border-radius:99px; padding:12px; font-size:16px; font-weight:700; cursor:pointer; font-family:'Zen Maru Gothic',sans-serif; display:flex; align-items:center; justify-content:center; gap:5px; }
 
-/* サムネイル */
-.thumb-wrap { display:none; margin-top:12px; }
-.thumb-lbl  { font-size:15px; color:var(--teal); font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-bottom:6px; display:flex; align-items:center; gap:4px; }
-.thumb-wrap img { width:100%; border-radius:12px; border:1px solid #D8EEF0; }
-.btn-recrop {
-  margin-top:8px; width:100%; background:#F2F5F7; color:var(--muted);
-  border:none; border-radius:99px; padding:10px; font-size:15px; font-weight:700;
-  cursor:pointer; font-family:'Zen Maru Gothic',sans-serif;
-  display:flex; align-items:center; justify-content:center; gap:5px;
-}
+/* 複数トリミング */
+.multi-crop-info { font-size:15px; color:var(--muted); line-height:1.6; margin-bottom:12px; background:var(--gray); border-radius:10px; padding:10px 14px; }
+.multi-crop-container { position:relative; border-radius:14px; overflow:hidden; background:#000; touch-action:none; }
+.multi-crop-container img { display:block; width:100%; pointer-events:none; user-select:none; }
+.region-box { position:absolute; border:2px solid var(--teal); border-radius:4px; pointer-events:none; }
+.region-box.active { border-color:var(--orange); border-width:3px; }
+.region-label { position:absolute; top:-20px; left:0; background:var(--teal); color:white; font-size:11px; font-weight:700; padding:2px 7px; border-radius:99px; white-space:nowrap; }
+.region-box.active .region-label { background:var(--orange); }
+
+/* トリミング領域リスト */
+.region-list { margin-top:12px; display:flex; flex-direction:column; gap:8px; }
+.region-item { background:var(--gray); border-radius:12px; padding:10px 12px; display:flex; align-items:center; gap:10px; }
+.region-thumb { width:56px; height:42px; object-fit:cover; border-radius:8px; border:1px solid var(--border); flex-shrink:0; }
+.region-item-body { flex:1; min-width:0; }
+.region-label-input { width:100%; border:1.5px solid var(--border); border-radius:8px; padding:7px 10px; font-size:15px; font-family:'Zen Maru Gothic',sans-serif; outline:none; background:white; color:var(--text); }
+.region-label-input:focus { border-color:var(--teal); }
+.region-date { font-size:12px; color:var(--muted); margin-top:3px; }
+.btn-region-del { background:none; border:none; color:#C0391A; font-size:18px; cursor:pointer; flex-shrink:0; padding:4px; }
 
 /* メインボタン */
-.btn-main {
-  width:100%; border:none; border-radius:99px;
-  padding:17px 20px; font-size:18px; font-weight:700;
-  display:flex; align-items:center; justify-content:center; gap:8px;
-  color:white; cursor:pointer; font-family:'Zen Maru Gothic',sans-serif;
-  transition:filter .15s, transform .1s; letter-spacing:.3px;
-}
+.btn-main { width:100%; border:none; border-radius:99px; padding:17px 20px; font-size:18px; font-weight:700; display:flex; align-items:center; justify-content:center; gap:8px; color:white; cursor:pointer; font-family:'Zen Maru Gothic',sans-serif; transition:filter .15s, transform .1s; letter-spacing:.3px; }
 .btn-main:not(:disabled):active { filter:brightness(.9); transform:scale(.98); }
 .btn-main:disabled { background:#C8D8D8; cursor:not-allowed; }
 .btn-main.orange { background:var(--orange); }
 .btn-main.teal   { background:var(--teal); }
-.btn-main.green  { background:#2BBF80; }
+.btn-main.green  { background:var(--green); }
+.btn-main.amber  { background:var(--amber); }
 
 /* ローディング */
 .loading { display:none; text-align:center; padding:20px; }
-.spinner {
-  width:32px;height:32px; border:3px solid #C8EDF2;
-  border-top-color:var(--teal); border-radius:50%;
-  animation:spin .8s linear infinite; margin:0 auto 10px;
-}
+.spinner { width:32px; height:32px; border:3px solid #C8EDF2; border-top-color:var(--teal); border-radius:50%; animation:spin .8s linear infinite; margin:0 auto 10px; }
 @keyframes spin { to { transform:rotate(360deg); } }
 .loading-text { font-size:16px; color:var(--muted); font-weight:500; }
 
 /* クリーン結果 */
 .clean-result { display:none; margin-top:12px; }
-.clean-result-lbl { font-size:15px; color:#2BBF80; font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-bottom:6px; display:flex; align-items:center; gap:4px; }
+.clean-result-lbl { font-size:15px; color:var(--green); font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-bottom:6px; display:flex; align-items:center; gap:4px; }
 .clean-result img { width:100%; border-radius:12px; border:1px solid #D0EDD5; }
 
 /* エラー */
-.err {
-  background:#FFF0EE; border:1px solid #F8CABB; border-radius:12px;
-  padding:10px 14px; color:#C0391A; font-size:13px;
-  margin-top:8px; display:none; line-height:1.6;
-  display:none; align-items:center; gap:6px;
-}
+.err { background:#FFF0EE; border:1px solid #F8CABB; border-radius:12px; padding:10px 14px; color:#C0391A; font-size:13px; margin-top:8px; display:none; line-height:1.6; }
 
-/* B4 */
+/* ストックフォルダ */
+.stock-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+.stock-item { border-radius:12px; overflow:hidden; border:2.5px solid var(--border); background:var(--gray); cursor:pointer; transition:all .2s; position:relative; }
+.stock-item.selected { border-color:var(--orange); }
+.stock-item img { width:100%; aspect-ratio:4/3; object-fit:cover; display:block; }
+.stock-item-body { padding:8px 10px; }
+.stock-item-name { font-size:13px; font-weight:700; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.stock-item-date { font-size:11px; color:var(--muted); margin-top:2px; }
+.stock-badge { position:absolute; top:6px; right:6px; background:var(--orange); color:white; font-size:11px; font-weight:700; width:22px; height:22px; border-radius:50%; display:none; align-items:center; justify-content:center; }
+.stock-item.selected .stock-badge { display:flex; }
+.stock-empty { text-align:center; padding:40px 20px; color:var(--muted); font-size:15px; }
+.btn-stock-del { position:absolute; top:6px; left:6px; background:rgba(0,0,0,.5); color:white; border:none; border-radius:50%; width:24px; height:24px; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+
+/* B4プレビュー */
 .b4-label { font-size:15px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
-.b4-wrap  { overflow:hidden; border-radius:12px; border:1px solid #E0EBEC; background:white; }
+.b4-wrap { overflow:hidden; border-radius:12px; border:1px solid #E0EBEC; background:white; }
 .b4-frame { display:flex; width:1000px; transform-origin:top left; }
-.b4-frame img { flex:1; width:50%; display:block; object-fit:contain; }
+.b4-page { flex:1; width:50%; min-height:200px; display:flex; flex-direction:column; gap:4px; padding:4px; }
+.b4-page-label { font-size:10px; font-weight:700; color:var(--muted); letter-spacing:1px; text-align:center; }
+.b4-slot { flex:1; display:flex; align-items:center; justify-content:center; background:#F8F8F8; border-radius:4px; overflow:hidden; }
+.b4-slot img { width:100%; object-fit:contain; display:block; }
+.b4-divider { width:2px; background:var(--border); flex-shrink:0; }
 
-.next-btn-wrap { padding:16px 20px; background:var(--white); }
+/* APIキー折りたたみ */
+.api-header { display:flex; align-items:center; justify-content:space-between; cursor:pointer; user-select:none; }
+.api-header-left { display:flex; align-items:center; gap:8px; font-size:19px; font-weight:700; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; }
+.api-saved-badge { display:none; background:#E8F8F0; border:1px solid #A8DFC0; color:#2A8050; border-radius:99px; font-size:11px; font-weight:700; padding:3px 10px; letter-spacing:0; }
+.api-saved-badge.show { display:inline-flex; align-items:center; gap:4px; }
+.api-chevron { width:28px; height:28px; border-radius:50%; background:var(--gray); display:flex; align-items:center; justify-content:center; transition:transform .25s; flex-shrink:0; color:var(--muted); }
+.api-chevron.open { transform:rotate(180deg); }
+.api-body { overflow:hidden; max-height:0; transition:max-height .3s ease, opacity .25s ease; opacity:0; }
+.api-body.open { max-height:200px; opacity:1; }
+.key-row { display:flex; gap:8px; align-items:center; }
+.key-row input { flex:1; min-width:0; border:1.5px solid var(--border); border-radius:99px; padding:12px 16px; font-size:17px; outline:none; font-family:'Zen Maru Gothic',sans-serif; background:var(--gray); color:var(--text); }
+.key-row input:focus { border-color:var(--teal); background:white; }
+.api-note { font-size:15px; color:var(--muted); margin-top:4px; line-height:1.6; }
 
-.app-footer { background:var(--teal); padding:28px 20px 48px; text-align:center; }
-.footer-text { font-size:14px; color:rgba(255,255,255,.45); letter-spacing:1px; }
-
-/* セパレーター */
-.sep { height:1px; background:#EEF2F3; margin:0 20px; }
-
-  .card-label { font-size: 15px; }
-  .app-header { padding: 44px 16px 22px; }
-  .btn-main { font-size: 16px; padding: 15px 16px; }
-  .upload-area { padding: 22px 10px; }
-  .tabs .tab { font-size: 17px; }
-  .crop-btns { gap: 8px; }
-  .next-btn-wrap { padding: 14px 16px; }
-  .white-section, .teal-section { padding: 16px; }
-}
-
-/* ===== レスポンシブ: clampベースで全デバイス自動対応 ===== */
-
-/* iPhone SE3 (375px) */
-@media (max-width: 389px) {
-  .app-header { padding: 44px 14px 20px; }
-  .app-header h1 { font-size: 22px; }
-  .app-header p { font-size: 12px !important; }
-  .card { padding: 12px; }
-  .card-label { font-size: 14px; letter-spacing: 1px; }
-  .key-row input { font-size: 14px; padding: 10px 13px; }
-  .btn-main { font-size: 15px; padding: 14px 14px; }
-  .btn-save { font-size: 13px !important; padding: 10px 14px !important; }
-  .tab { font-size: 16px; padding: 11px 0; }
-  .upload-area { padding: 20px 10px; }
-  .upload-area svg { width: 32px; height: 32px; }
-  .upload-lbl { font-size: 13px; }
-  .btn-crop-cancel, .btn-crop-ok { font-size: 13px; padding: 11px; }
-  .next-btn-wrap { padding: 12px 14px; }
-  .white-section, .teal-section { padding: 14px; }
-  .loading-text { font-size: 13px; }
-}
-
-/* iPhone 16 / 標準iPhone (390–429px) */
-@media (min-width: 390px) and (max-width: 429px) {
-  .app-header { padding: 48px 18px 24px; }
-  .card { padding: 16px; }
-  .btn-main { font-size: 16px; padding: 15px 18px; }
-}
-
-/* iPhone 16 Plus / Pro Max (430px〜) */
-@media (min-width: 430px) and (max-width: 767px) {
-  .app-header { padding: 52px 20px 28px; }
-  .card { padding: 18px; }
-  .btn-main { font-size: 17px; padding: 16px 20px; }
-}
-
-/* iPad (768px〜) */
-@media (min-width: 768px) {
-  body { background: #e4f2f5; }
-  .app-header { padding: 60px 40px 32px; }
-  .app-header h1 { font-size: 32px; }
-  .app-header p { font-size: 16px !important; }
-
-  /* 中央カラム */
-  .page-container {
-    max-width: 680px;
-    margin: 0 auto;
-  }
-
-  /* コンテンツ幅制限 */
-  #page1, #page2, #pdfContent,
-  .tabs, .card, .next-btn-wrap,
-  div[style*="background:var(--white)"] > .card,
-  div[style*="background:var(--white)"] > .sep {
-    max-width: 680px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .card { padding: 24px; }
-  .card-label { font-size: 17px; }
-  .key-row input { font-size: 17px; padding: 13px 18px; }
-  .btn-main { font-size: 18px; padding: 18px 24px; }
-  .tab { font-size: 19px; padding: 15px 0; }
-  .upload-area { padding: 36px 20px; }
-  .upload-area svg { width: 48px; height: 48px; }
-  .upload-lbl { font-size: 16px; }
-  .btn-crop-cancel, .btn-crop-ok { font-size: 16px; padding: 14px; }
-  .loading-text { font-size: 15px; }
-  .api-note { font-size: 13px; color:#2A6080; }
-  .next-btn-wrap { padding: 20px 24px; }
-}
-
-/* iPad Pro (1024px〜) */
-@media (min-width: 1024px) {
-  .app-header h1 { font-size: 36px; }
-  .app-header p { font-size: 17px !important; }
-  .card { padding: 28px; }
-  .btn-main { font-size: 19px; padding: 20px 28px; }
-}
-
-/* ② 自動再試行ボタン */
-.btn-retry {
-  width:100%; border:none; border-radius:99px;
-  padding:13px 20px; font-size:16px; font-weight:700;
-  display:flex; align-items:center; justify-content:center; gap:8px;
-  color:white; cursor:pointer; font-family:'Zen Maru Gothic',sans-serif;
-  background:#E8A020; margin-top:8px; font-size:16px;
-  transition:filter .15s;
-}
-.btn-retry:active { filter:brightness(.9); }
-
-/* ③ やり直し指示エリア */
-.redo-section {
-  margin-top:14px; padding-top:14px;
-  border-top:1px solid #EEF2F3;
-}
-.redo-label {
-  font-size:15px; font-weight:700; letter-spacing:1px;
-  color:var(--muted); text-transform:uppercase;
-  margin-bottom:8px; display:flex; align-items:center; gap:5px;
-}
-.redo-input {
-  width:100%; border:1.5px solid var(--border); border-radius:14px;
-  padding:11px 14px; font-size:16px; font-family:'Zen Maru Gothic',sans-serif;
-  outline:none; resize:none; color:var(--text); background:var(--gray);
-  line-height:1.6;
-}
-.redo-input:focus { border-color:var(--teal); background:white; }
-.redo-hint {
-  font-size:14px; color:var(--muted); margin-top:5px; line-height:1.5;
-}
-.btn-redo {
-  width:100%; border:none; border-radius:99px;
-  padding:13px 20px; font-size:16px; font-weight:700;
-  display:flex; align-items:center; justify-content:center; gap:8px;
-  color:white; cursor:pointer; font-family:'Zen Maru Gothic',sans-serif;
-  background:var(--teal); margin-top:10px; font-size:16px;
-  transition:filter .15s;
-}
-.btn-redo:active { filter:brightness(.9); }
-
-/* ===== ガイドパネル ===== */
-.guide-btn {
-  position:absolute; top:16px; right:16px;
-  width:34px; height:34px; border-radius:50%;
-  background:rgba(255,255,255,.25); border:1.5px solid rgba(255,255,255,.5);
-  color:white; font-size:16px; font-weight:700;
-  display:flex; align-items:center; justify-content:center;
-  cursor:pointer; font-family:'Zen Maru Gothic',sans-serif;
-  transition:background .2s;
-}
-.guide-btn:active { background:rgba(255,255,255,.4); }
-
-.guide-overlay {
-  display:none; position:fixed; inset:0;
-  background:rgba(0,0,0,.45); z-index:100;
-  animation:fadeIn .2s ease;
-}
+/* ガイドパネル */
+.guide-btn { position:absolute; top:16px; right:16px; width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,.25); border:1.5px solid rgba(255,255,255,.5); color:white; font-size:16px; font-weight:700; display:flex; align-items:center; justify-content:center; cursor:pointer; font-family:'Zen Maru Gothic',sans-serif; }
+.guide-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:100; }
 .guide-overlay.open { display:block; }
-@keyframes fadeIn { from{opacity:0} to{opacity:1} }
-
-.guide-panel {
-  position:fixed; top:0; right:0; bottom:0;
-  width:92%; max-width:420px;
-  background:white; z-index:101; overflow-y:auto;
-  transform:translateX(100%);
-  transition:transform .28s cubic-bezier(.4,0,.2,1);
-  font-family:'Zen Maru Gothic','Hiragino Sans',sans-serif;
-}
+.guide-panel { position:fixed; top:0; right:0; bottom:0; width:92%; max-width:420px; background:white; z-index:101; overflow-y:auto; transform:translateX(100%); transition:transform .28s cubic-bezier(.4,0,.2,1); font-family:'Zen Maru Gothic','Hiragino Sans',sans-serif; }
 .guide-panel.open { transform:translateX(0); }
-
-.guide-header {
-  background:var(--teal); padding:48px 20px 24px;
-  text-align:center; color:white; position:sticky; top:0; z-index:1;
-}
+.guide-header { background:var(--teal); padding:48px 20px 24px; text-align:center; color:white; position:sticky; top:0; z-index:1; }
 .guide-header h2 { font-size:24px; font-weight:900; }
-.guide-header p  { font-size:16px; color:rgba(255,255,255,.75); margin-top:4px; line-height:1.5; }
-.guide-close {
-  position:absolute; top:14px; right:14px;
-  width:32px; height:32px; border-radius:50%;
-  background:rgba(255,255,255,.2); border:none; color:white;
-  font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center;
-}
-
+.guide-close { position:absolute; top:14px; right:14px; width:32px; height:32px; border-radius:50%; background:rgba(255,255,255,.2); border:none; color:white; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
 .guide-chevron { width:100%; height:24px; background:white; clip-path:polygon(0 0,100% 0,50% 100%); }
-
 .guide-content { padding:16px 16px 40px; }
-
-.g-section-title {
-  font-size:14px; font-weight:700; letter-spacing:2px;
-  color:var(--muted); text-transform:uppercase;
-  margin:20px 0 10px; display:flex; align-items:center; gap:8px;
-}
+.g-section-title { font-size:14px; font-weight:700; letter-spacing:2px; color:var(--muted); text-transform:uppercase; margin:20px 0 10px; display:flex; align-items:center; gap:8px; }
 .g-section-title::after { content:''; flex:1; height:1px; background:var(--border); }
-
-.g-card {
-  background:var(--gray); border-radius:12px;
-  padding:14px; margin-bottom:8px;
-}
-
-/* 特徴 */
-.g-feature { display:flex; gap:10px; align-items:flex-start; margin-bottom:10px; }
-.g-feature:last-child { margin-bottom:0; }
-.g-ficon {
-  width:32px; height:32px; border-radius:8px;
-  background:var(--teal); color:white;
-  display:flex; align-items:center; justify-content:center;
-  font-size:14px; flex-shrink:0;
-}
-.g-ficon.orange { background:var(--orange); }
-.g-ficon.blue   { background:#5B9BD5; }
-.g-ficon.gray   { background:#7BBFCC; }
-.g-ftext h3 { font-size:17px; font-weight:700; margin-bottom:1px; }
-.g-ftext p  { font-size:16px; color:var(--muted); line-height:1.6; }
-
-/* ステップ */
+.g-card { background:var(--gray); border-radius:12px; padding:14px; margin-bottom:8px; }
 .g-step { display:flex; gap:12px; align-items:flex-start; position:relative; padding-bottom:16px; }
 .g-step:last-child { padding-bottom:0; }
-.g-step::before {
-  content:''; position:absolute; left:15px; top:34px; bottom:0;
-  width:2px; background:var(--border);
-}
+.g-step::before { content:''; position:absolute; left:15px; top:34px; bottom:0; width:2px; background:var(--border); }
 .g-step:last-child::before { display:none; }
-.g-snum {
-  width:32px; height:32px; border-radius:50%;
-  background:var(--teal); color:white;
-  display:flex; align-items:center; justify-content:center;
-  font-size:13px; font-weight:900; flex-shrink:0; z-index:1;
-}
+.g-snum { width:32px; height:32px; border-radius:50%; background:var(--teal); color:white; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:900; flex-shrink:0; z-index:1; }
 .g-sbody { padding-top:6px; }
 .g-sbody h3 { font-size:17px; font-weight:700; margin-bottom:2px; }
-.g-sbody p  { font-size:16px; color:var(--muted); line-height:1.6; }
-.g-tip {
-  margin-top:5px; background:white; border-radius:7px;
-  padding:7px 10px; font-size:15px; color:var(--muted); line-height:1.6;
-}
-.g-tip strong { color:var(--teal); }
-
-/* 料金 */
-.g-cost { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--border); font-size:16px; }
-.g-cost:last-child { border-bottom:none; }
-.g-cost .val { color:var(--teal); font-weight:700; }
-
-/* 注意 */
+.g-sbody p { font-size:16px; color:var(--muted); line-height:1.6; }
+.g-warning { background:#FFF0EE; border:1px solid #F8CABB; border-radius:10px; padding:10px 14px; font-size:15px; color:#C0391A; line-height:1.6; margin-bottom:8px; }
 .g-note { display:flex; gap:8px; font-size:16px; line-height:1.6; margin-bottom:7px; }
 .g-note:last-child { margin-bottom:0; }
 .g-ndot { width:5px; height:5px; border-radius:50%; background:var(--orange); flex-shrink:0; margin-top:7px; }
 
-/* ===== APIキー折りたたみ ===== */
-.api-header {
-  display:flex; align-items:center; justify-content:space-between;
-  cursor:pointer; user-select:none;
+/* フッター */
+.app-footer { background:var(--teal); padding:28px 20px 48px; text-align:center; }
+.footer-text { font-size:14px; color:rgba(255,255,255,.45); letter-spacing:1px; }
+
+/* next wrap */
+.next-btn-wrap { padding:16px 20px; background:var(--white); }
+
+/* ページ切替 */
+.page { display:none; }
+.page.active { display:block; }
+
+/* タブ（ストック・B4） */
+.bottom-tabs { display:flex; background:var(--white); padding:0 20px; border-bottom:1px solid #EEF2F3; }
+.bottom-tab { flex:1; padding:13px 0; font-size:17px; font-weight:700; text-align:center; color:var(--muted); cursor:pointer; border-bottom:3px solid transparent; background:none; border-top:none; border-left:none; border-right:none; font-family:'Zen Maru Gothic',sans-serif; }
+.bottom-tab.active { color:var(--teal); border-bottom-color:var(--teal); }
+
+/* 選択カウント */
+.select-count { background:var(--teal); color:white; border-radius:99px; padding:8px 16px; font-size:15px; font-weight:700; text-align:center; margin-bottom:12px; }
+
+/* レスポンシブ */
+@media (max-width:389px) {
+  .app-header h1 { font-size:22px; }
+  .card { padding:12px; }
+  .btn-main { font-size:15px; padding:14px; }
+  .stock-grid { grid-template-columns:repeat(2,1fr); gap:8px; }
 }
-.api-header-left { display:flex; align-items:center; gap:8px; font-size:19px; font-weight:700; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; }
-.api-saved-badge {
-  display:none; background:#E8F8F0; border:1px solid #A8DFC0;
-  color:#2A8050; border-radius:99px; font-size:11px; font-weight:700;
-  padding:3px 10px; letter-spacing:0;
+@media (min-width:768px) {
+  body { background:#e4f2f5; }
+  .app-header { padding:60px 40px 32px; }
+  .app-header h1 { font-size:32px; }
+  .page-container { max-width:680px; margin:0 auto; }
+  .card { padding:24px; }
+  .btn-main { font-size:18px; padding:18px 24px; }
+  .stock-grid { grid-template-columns:repeat(3,1fr); }
 }
-.api-saved-badge.show { display:inline-flex; align-items:center; gap:4px; }
-.api-chevron {
-  width:28px; height:28px; border-radius:50%;
-  background:var(--gray); display:flex; align-items:center; justify-content:center;
-  transition:transform .25s; flex-shrink:0;
-  color:var(--muted);
-}
-.api-chevron.open { transform:rotate(180deg); }
-.api-body {
-  overflow:hidden; max-height:0;
-  transition:max-height .3s ease, opacity .25s ease;
-  opacity:0;
-}
-.api-body.open { max-height:200px; opacity:1; }
 </style>
 
 <!-- SVGアイコン定義 -->
 <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <!-- ノート/プリント -->
     <symbol id="ico-note" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="4" y="3" width="16" height="18" rx="2"/>
-      <line x1="8" y1="8" x2="16" y2="8"/>
-      <line x1="8" y1="12" x2="16" y2="12"/>
-      <line x1="8" y1="16" x2="12" y2="16"/>
+      <rect x="4" y="3" width="16" height="18" rx="2"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="12" y2="16"/>
     </symbol>
-    <!-- カメラ -->
     <symbol id="ico-camera" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-      <circle cx="12" cy="13" r="4"/>
+      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>
     </symbol>
-    <!-- キー -->
     <symbol id="ico-key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="7.5" cy="15.5" r="4.5"/>
-      <path d="M21 2l-9.6 9.6"/>
-      <path d="M15.5 7.5l3 3"/>
-      <path d="M18 5l2 2"/>
+      <circle cx="7.5" cy="15.5" r="4.5"/><path d="M21 2l-9.6 9.6"/><path d="M15.5 7.5l3 3"/><path d="M18 5l2 2"/>
     </symbol>
-    <!-- はさみ（クロップ） -->
     <symbol id="ico-crop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="6" cy="6" r="3"/>
-      <circle cx="6" cy="18" r="3"/>
-      <line x1="20" y1="4" x2="8.12" y2="15.88"/>
-      <line x1="14.47" y1="14.48" x2="20" y2="20"/>
-      <line x1="7.41" y1="7.41" x2="4" y2="4"/>
+      <circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="7.41" y1="7.41" x2="4" y2="4"/>
     </symbol>
-    <!-- 消しゴム -->
-    <symbol id="ico-eraser" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-      <!-- 消しゴム本体：角丸四角を-40度回転 -->
-      <rect x="5.5" y="2.5" width="12" height="17" rx="2.5" transform="rotate(-40 12 12)"/>
-      <!-- 使用済み部分の区切り線 -->
-      <line x1="2.5" y1="19.5" x2="9" y2="12"/>
-      <!-- 地面線 -->
-      <line x1="2" y1="22" x2="16" y2="22"/>
-    </symbol>
-    <!-- チェック -->
     <symbol id="ico-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
       <polyline points="20 6 9 17 4 12"/>
     </symbol>
-    <!-- 矢印右 -->
     <symbol id="ico-arrow-r" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="5" y1="12" x2="19" y2="12"/>
-      <polyline points="12 5 19 12 12 19"/>
+      <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
     </symbol>
-    <!-- PDF -->
     <symbol id="ico-pdf" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-      <polyline points="14 2 14 8 20 8"/>
-      <line x1="9" y1="13" x2="15" y2="13"/>
-      <line x1="9" y1="17" x2="15" y2="17"/>
-      <polyline points="9 9 10 9 11 9"/>
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
     </symbol>
-    <!-- ダウンロード -->
     <symbol id="ico-dl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-      <polyline points="7 10 12 15 17 10"/>
-      <line x1="12" y1="15" x2="12" y2="3"/>
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
     </symbol>
-    <!-- やり直し -->
     <symbol id="ico-redo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="1 4 1 10 7 10"/>
-      <path d="M3.51 15a9 9 0 1 0 .49-4.95"/>
+      <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.95"/>
     </symbol>
-    <!-- リセット -->
     <symbol id="ico-reset" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="1 4 1 10 7 10"/>
-      <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+      <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+    </symbol>
+    <symbol id="ico-folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+    </symbol>
+    <symbol id="ico-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
+    </symbol>
+    <symbol id="ico-eraser" viewBox="0 0 214.15 198.19" fill="currentColor">
+      <path fill-rule="nonzero" d="M204.38,58.75c-17.76-17.56-35.3-35.34-53.04-52.92-1.76-1.74-3.68-3.38-5.99-4.33-5.92-2.52-13.26-1.9-18.35,2.17-2.4,1.97-4.5,4.27-6.73,6.43C83.44,46.74,46.68,83.47,9.92,120.2c-2.06,2.09-4.26,4.06-6,6.44-2.71,3.69-4.39,8.33-3.8,12.95.41,2.76,1.29,5.5,2.93,7.78,2.03,2.89,4.71,5.25,7.12,7.82,11.76,11.83,23.41,23.76,35.21,35.56,3.18,3.12,6.65,6.7,11.32,7.2,4.03.21,8.07.04,12.1.11,43.15.04,86.31.07,129.45.13,1.91.13,3.84-1.1,4.38-2.97.88-2.59-1.26-5.76-4.05-5.63-7.18-.05-14.36-.03-21.54-.06-23.12-.14-46.24.08-69.35-.03l.1-.4c12.58-12.02,24.73-24.48,37.15-36.67,15.27-15.19,30.46-30.47,45.78-45.6,6.25-6.43,12.8-12.57,18.99-19.06,4.59-4.73,5.61-12.28,3.18-18.29-1.71-4.35-5.26-7.52-8.48-10.74Z"/>
     </symbol>
   </defs>
 </svg>
-
 </head>
 <body>
 
 <!-- ヘッダー -->
-<div class="app-header" style="position:relative;">
+<div class="app-header">
   <button class="guide-btn" onclick="openGuide()">?</button>
-<div class="logo-icon">
+  <div style="margin-bottom:8px;">
     <svg width="36" height="36" style="color:rgba(255,255,255,.9)"><use href="#ico-note"/></svg>
   </div>
   <h1>復習プリントメーカー</h1>
-  <p style="font-size:16px;color:rgba(255,255,255,.7);margin-top:6px;font-weight:500;line-height:1.6;">一度書き込んだプリントから手書きだけ消して<br>B4横で再生させます！</p>
+  <p style="font-size:15px;color:rgba(255,255,255,.7);margin-top:6px;font-weight:500;line-height:1.6;">手書きを消して問題をストック→B4印刷</p>
 </div>
 
 <div style="background:var(--white)">
@@ -556,539 +300,265 @@ body {
     <div style="height:12px;"></div>
     <div class="key-row">
       <input type="password" id="api-key" placeholder="sk-..." autocomplete="off">
-      <button class="btn-main teal" style="width:auto;flex-shrink:0;padding:12px 18px;font-size:16px;white-space:nowrap;" onclick="saveKey()">保存</button>
+      <button class="btn-main teal" style="width:auto;flex-shrink:0;padding:12px 18px;font-size:16px;" onclick="saveKey()">保存</button>
     </div>
-    <div class="api-status" id="api-status"></div>
-    <div class="api-note">この端末のブラウザにのみ保存。外部には送信されません。</div>
+    <div id="api-status" style="font-size:15px;margin-top:6px;min-height:16px;color:var(--teal);"></div>
+    <div class="api-note">この端末にのみ保存。外部には送信されません。</div>
   </div>
 </div>
 
 <div class="sep"></div>
 
-<!-- タブ -->
-<div class="tabs">
-  <button class="tab active" id="tab1" onclick="switchPage(1)">
-    <svg width="14" height="14"><use href="#ico-note"/></svg>1枚目
-  </button>
-  <button class="tab" id="tab2" onclick="switchPage(2)">
-    <svg width="14" height="14"><use href="#ico-note"/></svg>2枚目
-  </button>
+<!-- ステップインジケーター -->
+<div class="step-indicator" id="stepIndicator">
+  <div class="step-dot active" id="sd1">1</div>
+  <div class="step-line" id="sl1"></div>
+  <div class="step-dot" id="sd2">2</div>
+  <div class="step-line" id="sl2"></div>
+  <div class="step-dot" id="sd3">3</div>
+  <div class="step-line" id="sl3"></div>
+  <div class="step-dot" id="sd4">4</div>
 </div>
 
-<!-- ===== 1枚目 ===== -->
-<div id="page1">
+<!-- ===== STEP1: モード選択 ===== -->
+<div class="page active" id="step1">
+  <div class="card">
+    <div class="card-label">モードを選ぶ</div>
+    <div class="mode-cards">
+      <div class="mode-card selected" id="modeA" onclick="selectMode('A')">
+        <h3>
+          <div class="mode-radio checked" id="radioA"></div>
+          手書きを消してからトリミング
+        </h3>
+        <p>書き込み・丸つけ・計算メモをAIで消去→問題ごとにトリミング</p>
+      </div>
+      <div class="mode-card" id="modeB" onclick="selectMode('B')">
+        <h3>
+          <div class="mode-radio" id="radioB"></div>
+          そのままトリミング
+        </h3>
+        <p>書き込みなし・バツ印のみのプリント。明るさ・補正のみ行う</p>
+      </div>
+    </div>
+  </div>
+  <div class="next-btn-wrap">
+    <button class="btn-main teal" onclick="goStep(2)">
+      次へ <svg width="18" height="18"><use href="#ico-arrow-r"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ===== STEP2: 写真・クリーン ===== -->
+<div class="page" id="step2">
   <div class="card" style="padding-top:20px;">
     <div class="card-label">
       <svg width="15" height="15" style="color:var(--muted)"><use href="#ico-camera"/></svg>
-      写真を選ぶ・クロップ
+      写真を選ぶ
     </div>
-    <div class="upload-area" id="up1">
-      <input type="file" accept="image/*" onchange="loadImg(1,event)">
+    <div class="upload-area" id="upArea">
+      <input type="file" accept="image/*" onchange="loadImg(event)">
       <svg width="40" height="40" style="color:var(--muted)"><use href="#ico-camera"/></svg>
       <div class="upload-lbl">写真を撮る・選ぶ</div>
     </div>
-    <div class="crop-container" id="cropContainer1">
-      <img id="cropImg1" draggable="false">
-      <div class="mask" id="mt1"></div><div class="mask" id="mb1"></div>
-      <div class="mask" id="ml1"></div><div class="mask" id="mr1"></div>
-      <div class="crop-border" id="cb1"></div>
-      <div class="grid-line" id="gv1a"></div><div class="grid-line" id="gv1b"></div>
-      <div class="grid-line" id="gh1a"></div><div class="grid-line" id="gh1b"></div>
-      <div class="handle tl" data-n="1" data-h="tl"></div><div class="handle tr" data-n="1" data-h="tr"></div>
-      <div class="handle bl" data-n="1" data-h="bl"></div><div class="handle br" data-n="1" data-h="br"></div>
-      <div class="handle tm" data-n="1" data-h="tm"></div><div class="handle bm" data-n="1" data-h="bm"></div>
-      <div class="handle lm" data-n="1" data-h="lm"></div><div class="handle rm" data-n="1" data-h="rm"></div>
+    <!-- クロップUI（全体クロップ用） -->
+    <div class="crop-container" id="cropContainer">
+      <img id="cropImg" draggable="false">
+      <div class="mask" id="mt"></div><div class="mask" id="mb"></div>
+      <div class="mask" id="ml"></div><div class="mask" id="mr"></div>
+      <div class="crop-border" id="cb"></div>
+      <div class="grid-line" id="gva"></div><div class="grid-line" id="gvb"></div>
+      <div class="grid-line" id="gha"></div><div class="grid-line" id="ghb"></div>
+      <div class="handle tl" data-h="tl"></div><div class="handle tr" data-h="tr"></div>
+      <div class="handle bl" data-h="bl"></div><div class="handle br" data-h="br"></div>
+      <div class="handle tm" data-h="tm"></div><div class="handle bm" data-h="bm"></div>
+      <div class="handle lm" data-h="lm"></div><div class="handle rm" data-h="rm"></div>
     </div>
-    <div class="crop-btns" id="cropBtns1" style="display:none;">
-      <button class="btn-crop-cancel" onclick="resetCrop(1)">
+    <div class="crop-btns" id="cropBtns" style="display:none;">
+      <button class="btn-crop-cancel" onclick="resetCrop()">
         <svg width="14" height="14"><use href="#ico-reset"/></svg>リセット
       </button>
-      <button class="btn-crop-ok" onclick="applyCrop(1)">
-        <svg width="14" height="14"><use href="#ico-crop"/></svg>クロップを確定
+      <button class="btn-crop-ok" onclick="applyCrop()">
+        <svg width="14" height="14"><use href="#ico-crop"/></svg>クロップ確定
       </button>
     </div>
-    <div class="thumb-wrap" id="tw1">
-      <div class="thumb-lbl">
-        <svg width="13" height="13" style="color:var(--teal)"><use href="#ico-check"/></svg>
-        クロップ済み
+    <div id="thumbWrap" style="display:none;margin-top:12px;">
+      <div style="font-size:15px;color:var(--teal);font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:4px;">
+        <svg width="13" height="13" style="color:var(--teal)"><use href="#ico-check"/></svg>クロップ済み
       </div>
-      <img id="ti1">
-      <button class="btn-recrop" onclick="reCrop(1)">
+      <img id="thumbImg" style="width:100%;border-radius:12px;border:1px solid var(--border);">
+      <button class="btn-main" style="background:#F2F5F7;color:var(--muted);margin-top:8px;font-size:15px;padding:10px;" onclick="reCrop()">
         <svg width="13" height="13"><use href="#ico-redo"/></svg>やり直す
       </button>
     </div>
   </div>
 
-  <div class="card">
+  <div class="card" id="cleanCard">
     <div class="card-label">
-      <svg width="15" height="15" viewBox="0 0 214.15 198.19" fill="var(--muted)" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;"><path fill-rule="nonzero" d="M204.38,58.75c-17.76-17.56-35.3-35.34-53.04-52.92-1.76-1.74-3.68-3.38-5.99-4.33-5.92-2.52-13.26-1.9-18.35,2.17-2.4,1.97-4.5,4.27-6.73,6.43C83.44,46.74,46.68,83.47,9.92,120.2c-2.06,2.09-4.26,4.06-6,6.44-2.71,3.69-4.39,8.33-3.8,12.95.41,2.76,1.29,5.5,2.93,7.78,2.03,2.89,4.71,5.25,7.12,7.82,11.76,11.83,23.41,23.76,35.21,35.56,3.18,3.12,6.65,6.7,11.32,7.2,4.03.21,8.07.04,12.1.11,43.15.04,86.31.07,129.45.13,1.91.13,3.84-1.1,4.38-2.97.88-2.59-1.26-5.76-4.05-5.63-7.18-.05-14.36-.03-21.54-.06-23.12-.14-46.24.08-69.35-.03l.1-.4c12.58-12.02,24.73-24.48,37.15-36.67,15.27-15.19,30.46-30.47,45.78-45.6,6.25-6.43,12.8-12.57,18.99-19.06,4.59-4.73,5.61-12.28,3.18-18.29-1.71-4.35-5.26-7.52-8.48-10.74ZM119.54,165.46c-4.24,4.17-8.4,8.43-12.63,12.61-3.23,3.18-6.41,6.42-9.95,9.26-1.38,1.04-2.87,2.23-4.7,2.12-10.43.2-20.87.02-31.29.1-1.61-.11-3.43.3-4.82-.71-2.67-1.76-4.8-4.2-7.07-6.41-12.05-12.48-24.45-24.62-36.62-36.98-1.23-1.3-2.46-2.65-3.23-4.27-.93-1.86-.98-4.06-.41-6.03,1.02-2.87,3.3-5.01,5.37-7.15,11.63-11.48,23.16-23.06,34.75-34.57,19.98,19.92,40.04,39.78,60.07,59.66,3.74,3.82,7.46,7.69,11.31,11.41-.09.41-.5.64-.75.96ZM204.63,79.87c-.97,1.79-2.46,3.22-3.87,4.67-24.83,24.58-49.41,49.41-74.39,73.84-.63-.42-1.09-1.02-1.6-1.54-7.42-7.75-15.1-15.23-22.67-22.83-14.63-14.65-29.27-29.28-43.92-43.91-.93-1.06-2.15-1.91-2.87-3.13,17.7-17.61,35.32-35.31,53.09-52.85,6.94-6.93,13.79-13.95,20.84-20.76,1.73-1.59,3.36-3.46,5.65-4.25,1.85-.57,3.85-.55,5.72-.12,2.49.64,4.27,2.62,6.02,4.38,18.44,18.3,36.58,36.91,55.11,55.12,1.53,1.48,3.02,3.15,3.63,5.23.47,2.04.31,4.3-.75,6.14Z"/></svg>
-      手書きを消す
+      <svg width="15" height="15" style="color:var(--muted)"><use href="#ico-eraser"/></svg>
+      <span id="cleanCardTitle">手書きを消す</span>
     </div>
-    <div class="err" id="err1"></div>
-    <button class="btn-retry" id="btnRetry1" onclick="runRetry(1)" style="display:none;">
+    <div class="err" id="err2" style="display:none;"></div>
+    <button class="btn-main amber" id="btnRetry2" onclick="runRetry()" style="display:none;margin-bottom:8px;">
       🔄 自動調整して再試行
     </button>
-    <button class="btn-main orange" id="btnC1" onclick="runClean(1)" disabled>
-      <svg width="20" height="20" viewBox="0 0 214.15 198.19" fill="white" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;"><path fill-rule="nonzero" d="M204.38,58.75c-17.76-17.56-35.3-35.34-53.04-52.92-1.76-1.74-3.68-3.38-5.99-4.33-5.92-2.52-13.26-1.9-18.35,2.17-2.4,1.97-4.5,4.27-6.73,6.43C83.44,46.74,46.68,83.47,9.92,120.2c-2.06,2.09-4.26,4.06-6,6.44-2.71,3.69-4.39,8.33-3.8,12.95.41,2.76,1.29,5.5,2.93,7.78,2.03,2.89,4.71,5.25,7.12,7.82,11.76,11.83,23.41,23.76,35.21,35.56,3.18,3.12,6.65,6.7,11.32,7.2,4.03.21,8.07.04,12.1.11,43.15.04,86.31.07,129.45.13,1.91.13,3.84-1.1,4.38-2.97.88-2.59-1.26-5.76-4.05-5.63-7.18-.05-14.36-.03-21.54-.06-23.12-.14-46.24.08-69.35-.03l.1-.4c12.58-12.02,24.73-24.48,37.15-36.67,15.27-15.19,30.46-30.47,45.78-45.6,6.25-6.43,12.8-12.57,18.99-19.06,4.59-4.73,5.61-12.28,3.18-18.29-1.71-4.35-5.26-7.52-8.48-10.74ZM119.54,165.46c-4.24,4.17-8.4,8.43-12.63,12.61-3.23,3.18-6.41,6.42-9.95,9.26-1.38,1.04-2.87,2.23-4.7,2.12-10.43.2-20.87.02-31.29.1-1.61-.11-3.43.3-4.82-.71-2.67-1.76-4.8-4.2-7.07-6.41-12.05-12.48-24.45-24.62-36.62-36.98-1.23-1.3-2.46-2.65-3.23-4.27-.93-1.86-.98-4.06-.41-6.03,1.02-2.87,3.3-5.01,5.37-7.15,11.63-11.48,23.16-23.06,34.75-34.57,19.98,19.92,40.04,39.78,60.07,59.66,3.74,3.82,7.46,7.69,11.31,11.41-.09.41-.5.64-.75.96ZM204.63,79.87c-.97,1.79-2.46,3.22-3.87,4.67-24.83,24.58-49.41,49.41-74.39,73.84-.63-.42-1.09-1.02-1.6-1.54-7.42-7.75-15.1-15.23-22.67-22.83-14.63-14.65-29.27-29.28-43.92-43.91-.93-1.06-2.15-1.91-2.87-3.13,17.7-17.61,35.32-35.31,53.09-52.85,6.94-6.93,13.79-13.95,20.84-20.76,1.73-1.59,3.36-3.46,5.65-4.25,1.85-.57,3.85-.55,5.72-.12,2.49.64,4.27,2.62,6.02,4.38,18.44,18.3,36.58,36.91,55.11,55.12,1.53,1.48,3.02,3.15,3.63,5.23.47,2.04.31,4.3-.75,6.14Z"/></svg>手書きを消す
-    </button>
-    <div class="loading" id="ld1">
-      <div class="spinner"></div>
-      <div class="loading-text">GPT-4oが処理中…</div>
-    </div>
-    <div class="clean-result" id="cr1">
-      <div class="clean-result-lbl">
-        <svg width="13" height="13" style="color:#2BBF80"><use href="#ico-check"/></svg>
-        クリーン完了！確認してください
-      </div>
-      <img id="ci1">
-      <div class="redo-section">
-        <div class="redo-label">↩ 気に入らない場合は追加指示</div>
-        <textarea class="redo-input" id="redoText1" rows="2" placeholder="例：図が消えてしまった / 手書きがまだ残っている / もっと白くして"></textarea>
-        <div class="redo-hint">指示を入力して再処理。空欄のままでも再処理できます。</div>
-        <button class="btn-redo" onclick="runRedo(1)">↩ 指示を加えて再処理</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="next-btn-wrap" id="next1" style="display:none;">
-    <button class="btn-main teal" onclick="switchPage(2)">
-      2枚目へ進む<svg width="18" height="18"><use href="#ico-arrow-r"/></svg>
-    </button>
-  </div>
-</div>
-
-<!-- ===== 2枚目 ===== -->
-<div id="page2" style="display:none;">
-  <div class="card" style="padding-top:20px;">
-    <div class="card-label">
-      <svg width="15" height="15" style="color:var(--muted)"><use href="#ico-camera"/></svg>
-      写真を選ぶ・クロップ
-    </div>
-    <div class="upload-area" id="up2">
-      <input type="file" accept="image/*" onchange="loadImg(2,event)">
-      <svg width="40" height="40" style="color:var(--muted)"><use href="#ico-camera"/></svg>
-      <div class="upload-lbl">写真を撮る・選ぶ</div>
-    </div>
-    <div class="crop-container" id="cropContainer2">
-      <img id="cropImg2" draggable="false">
-      <div class="mask" id="mt2"></div><div class="mask" id="mb2"></div>
-      <div class="mask" id="ml2"></div><div class="mask" id="mr2"></div>
-      <div class="crop-border" id="cb2"></div>
-      <div class="grid-line" id="gv2a"></div><div class="grid-line" id="gv2b"></div>
-      <div class="grid-line" id="gh2a"></div><div class="grid-line" id="gh2b"></div>
-      <div class="handle tl" data-n="2" data-h="tl"></div><div class="handle tr" data-n="2" data-h="tr"></div>
-      <div class="handle bl" data-n="2" data-h="bl"></div><div class="handle br" data-n="2" data-h="br"></div>
-      <div class="handle tm" data-n="2" data-h="tm"></div><div class="handle bm" data-n="2" data-h="bm"></div>
-      <div class="handle lm" data-n="2" data-h="lm"></div><div class="handle rm" data-n="2" data-h="rm"></div>
-    </div>
-    <div class="crop-btns" id="cropBtns2" style="display:none;">
-      <button class="btn-crop-cancel" onclick="resetCrop(2)">
-        <svg width="14" height="14"><use href="#ico-reset"/></svg>リセット
-      </button>
-      <button class="btn-crop-ok" onclick="applyCrop(2)">
-        <svg width="14" height="14"><use href="#ico-crop"/></svg>クロップを確定
-      </button>
-    </div>
-    <div class="thumb-wrap" id="tw2">
-      <div class="thumb-lbl">
-        <svg width="13" height="13" style="color:var(--teal)"><use href="#ico-check"/></svg>
-        クロップ済み
-      </div>
-      <img id="ti2">
-      <button class="btn-recrop" onclick="reCrop(2)">
-        <svg width="13" height="13"><use href="#ico-redo"/></svg>やり直す
-      </button>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-label">
-      <svg width="15" height="15" viewBox="0 0 214.15 198.19" fill="var(--muted)" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;"><path fill-rule="nonzero" d="M204.38,58.75c-17.76-17.56-35.3-35.34-53.04-52.92-1.76-1.74-3.68-3.38-5.99-4.33-5.92-2.52-13.26-1.9-18.35,2.17-2.4,1.97-4.5,4.27-6.73,6.43C83.44,46.74,46.68,83.47,9.92,120.2c-2.06,2.09-4.26,4.06-6,6.44-2.71,3.69-4.39,8.33-3.8,12.95.41,2.76,1.29,5.5,2.93,7.78,2.03,2.89,4.71,5.25,7.12,7.82,11.76,11.83,23.41,23.76,35.21,35.56,3.18,3.12,6.65,6.7,11.32,7.2,4.03.21,8.07.04,12.1.11,43.15.04,86.31.07,129.45.13,1.91.13,3.84-1.1,4.38-2.97.88-2.59-1.26-5.76-4.05-5.63-7.18-.05-14.36-.03-21.54-.06-23.12-.14-46.24.08-69.35-.03l.1-.4c12.58-12.02,24.73-24.48,37.15-36.67,15.27-15.19,30.46-30.47,45.78-45.6,6.25-6.43,12.8-12.57,18.99-19.06,4.59-4.73,5.61-12.28,3.18-18.29-1.71-4.35-5.26-7.52-8.48-10.74ZM119.54,165.46c-4.24,4.17-8.4,8.43-12.63,12.61-3.23,3.18-6.41,6.42-9.95,9.26-1.38,1.04-2.87,2.23-4.7,2.12-10.43.2-20.87.02-31.29.1-1.61-.11-3.43.3-4.82-.71-2.67-1.76-4.8-4.2-7.07-6.41-12.05-12.48-24.45-24.62-36.62-36.98-1.23-1.3-2.46-2.65-3.23-4.27-.93-1.86-.98-4.06-.41-6.03,1.02-2.87,3.3-5.01,5.37-7.15,11.63-11.48,23.16-23.06,34.75-34.57,19.98,19.92,40.04,39.78,60.07,59.66,3.74,3.82,7.46,7.69,11.31,11.41-.09.41-.5.64-.75.96ZM204.63,79.87c-.97,1.79-2.46,3.22-3.87,4.67-24.83,24.58-49.41,49.41-74.39,73.84-.63-.42-1.09-1.02-1.6-1.54-7.42-7.75-15.1-15.23-22.67-22.83-14.63-14.65-29.27-29.28-43.92-43.91-.93-1.06-2.15-1.91-2.87-3.13,17.7-17.61,35.32-35.31,53.09-52.85,6.94-6.93,13.79-13.95,20.84-20.76,1.73-1.59,3.36-3.46,5.65-4.25,1.85-.57,3.85-.55,5.72-.12,2.49.64,4.27,2.62,6.02,4.38,18.44,18.3,36.58,36.91,55.11,55.12,1.53,1.48,3.02,3.15,3.63,5.23.47,2.04.31,4.3-.75,6.14Z"/></svg>
-      手書きを消す
-    </div>
-    <div class="err" id="err2"></div>
-    <button class="btn-retry" id="btnRetry2" onclick="runRetry(2)" style="display:none;">
-      🔄 自動調整して再試行
-    </button>
-    <button class="btn-main orange" id="btnC2" onclick="runClean(2)" disabled>
-      <svg width="20" height="20" viewBox="0 0 214.15 198.19" fill="white" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;"><path fill-rule="nonzero" d="M204.38,58.75c-17.76-17.56-35.3-35.34-53.04-52.92-1.76-1.74-3.68-3.38-5.99-4.33-5.92-2.52-13.26-1.9-18.35,2.17-2.4,1.97-4.5,4.27-6.73,6.43C83.44,46.74,46.68,83.47,9.92,120.2c-2.06,2.09-4.26,4.06-6,6.44-2.71,3.69-4.39,8.33-3.8,12.95.41,2.76,1.29,5.5,2.93,7.78,2.03,2.89,4.71,5.25,7.12,7.82,11.76,11.83,23.41,23.76,35.21,35.56,3.18,3.12,6.65,6.7,11.32,7.2,4.03.21,8.07.04,12.1.11,43.15.04,86.31.07,129.45.13,1.91.13,3.84-1.1,4.38-2.97.88-2.59-1.26-5.76-4.05-5.63-7.18-.05-14.36-.03-21.54-.06-23.12-.14-46.24.08-69.35-.03l.1-.4c12.58-12.02,24.73-24.48,37.15-36.67,15.27-15.19,30.46-30.47,45.78-45.6,6.25-6.43,12.8-12.57,18.99-19.06,4.59-4.73,5.61-12.28,3.18-18.29-1.71-4.35-5.26-7.52-8.48-10.74ZM119.54,165.46c-4.24,4.17-8.4,8.43-12.63,12.61-3.23,3.18-6.41,6.42-9.95,9.26-1.38,1.04-2.87,2.23-4.7,2.12-10.43.2-20.87.02-31.29.1-1.61-.11-3.43.3-4.82-.71-2.67-1.76-4.8-4.2-7.07-6.41-12.05-12.48-24.45-24.62-36.62-36.98-1.23-1.3-2.46-2.65-3.23-4.27-.93-1.86-.98-4.06-.41-6.03,1.02-2.87,3.3-5.01,5.37-7.15,11.63-11.48,23.16-23.06,34.75-34.57,19.98,19.92,40.04,39.78,60.07,59.66,3.74,3.82,7.46,7.69,11.31,11.41-.09.41-.5.64-.75.96ZM204.63,79.87c-.97,1.79-2.46,3.22-3.87,4.67-24.83,24.58-49.41,49.41-74.39,73.84-.63-.42-1.09-1.02-1.6-1.54-7.42-7.75-15.1-15.23-22.67-22.83-14.63-14.65-29.27-29.28-43.92-43.91-.93-1.06-2.15-1.91-2.87-3.13,17.7-17.61,35.32-35.31,53.09-52.85,6.94-6.93,13.79-13.95,20.84-20.76,1.73-1.59,3.36-3.46,5.65-4.25,1.85-.57,3.85-.55,5.72-.12,2.49.64,4.27,2.62,6.02,4.38,18.44,18.3,36.58,36.91,55.11,55.12,1.53,1.48,3.02,3.15,3.63,5.23.47,2.04.31,4.3-.75,6.14Z"/></svg>手書きを消す
+    <button class="btn-main orange" id="btnClean" onclick="runClean()" disabled>
+      <svg width="20" height="20" style="color:white"><use href="#ico-eraser"/></svg>
+      <span id="btnCleanLabel">手書きを消す</span>
     </button>
     <div class="loading" id="ld2">
       <div class="spinner"></div>
-      <div class="loading-text">GPT-4oが処理中…</div>
+      <div class="loading-text" id="ld2Text">AIが処理中…</div>
     </div>
     <div class="clean-result" id="cr2">
       <div class="clean-result-lbl">
-        <svg width="13" height="13" style="color:#2BBF80"><use href="#ico-check"/></svg>
-        クリーン完了！確認してください
+        <svg width="13" height="13" style="color:var(--green)"><use href="#ico-check"/></svg>
+        完了！確認してください
       </div>
-      <img id="ci2">
-      <div class="redo-section">
-        <div class="redo-label">↩ 気に入らない場合は追加指示</div>
-        <textarea class="redo-input" id="redoText2" rows="2" placeholder="例：図が消えてしまった / 手書きがまだ残っている / もっと白くして"></textarea>
-        <div class="redo-hint">指示を入力して再処理。空欄のままでも再処理できます。</div>
-        <button class="btn-redo" onclick="runRedo(2)">↩ 指示を加えて再処理</button>
+      <img id="ci2" style="width:100%;border-radius:12px;border:1px solid #D0EDD5;">
+      <div style="margin-top:10px;">
+        <textarea id="redoText" rows="2" placeholder="例：図が消えた / 手書きが残っている / もっと白く" style="width:100%;border:1.5px solid var(--border);border-radius:14px;padding:11px 14px;font-size:16px;font-family:'Zen Maru Gothic',sans-serif;outline:none;resize:none;color:var(--text);background:var(--gray);line-height:1.6;"></textarea>
+        <button class="btn-main teal" onclick="runRedo()" style="margin-top:8px;font-size:16px;padding:13px;">↩ 指示を加えて再処理</button>
       </div>
     </div>
   </div>
 
   <div class="next-btn-wrap" id="next2" style="display:none;">
-    <button class="btn-main teal" onclick="showPDF()">
-      PDF作成へ進む<svg width="18" height="18"><use href="#ico-arrow-r"/></svg>
+    <button class="btn-main teal" onclick="goStep(3)">
+      問題をトリミングする <svg width="18" height="18"><use href="#ico-arrow-r"/></svg>
     </button>
   </div>
 </div>
 
-</div>
-</div><!-- /white -->
-
-<!-- PDF セクション -->
-<div id="pdfContent" style="display:none;">
-  <div class="chevron-top"></div>
-  <div class="teal-section" style="text-align:center;padding:20px 20px 8px;">
-    <svg width="28" height="28" style="color:rgba(255,255,255,.8)"><use href="#ico-pdf"/></svg>
-    <div style="font-size:24px;font-weight:900;color:white;margin-top:6px;">B4横 PDF を生成</div>
-  </div>
-  <div class="chevron-bottom"></div>
-
-  <div class="white-section">
-    <div class="b4-label">
-      プレビュー（左：1枚目 ／ 右：2枚目）
+<!-- ===== STEP3: 複数トリミング ===== -->
+<div class="page" id="step3">
+  <div class="card">
+    <div class="card-label">
+      <svg width="15" height="15" style="color:var(--muted)"><use href="#ico-crop"/></svg>
+      問題ごとにトリミング
     </div>
-    <div class="b4-wrap" id="b4Wrap">
-      <div class="b4-frame" id="b4Frame">
-        <img id="b4i1"><img id="b4i2">
+    <div class="multi-crop-info">
+      画像上をドラッグして問題の範囲を指定。複数選択できます。<br>
+      各問題にラベル名をつけてストックに保存します。
+    </div>
+    <div class="multi-crop-container" id="multiCropContainer">
+      <img id="multiCropImg" draggable="false">
+      <!-- 描画中の矩形 -->
+      <div id="drawingRect" style="position:absolute;border:2px dashed var(--orange);display:none;pointer-events:none;"></div>
+      <!-- 確定済み矩形はJSで追加 -->
+    </div>
+  </div>
+
+  <div class="card" id="regionListCard" style="display:none;">
+    <div class="card-label">
+      <svg width="15" height="15" style="color:var(--muted)"><use href="#ico-folder"/></svg>
+      選択した問題
+    </div>
+    <div class="region-list" id="regionList"></div>
+    <button class="btn-main green" id="btnSaveStock" onclick="saveToStock()" style="margin-top:14px;" disabled>
+      <svg width="18" height="18"><use href="#ico-folder"/></svg>ストックに保存
+    </button>
+    <div class="loading" id="ld3">
+      <div class="spinner"></div>
+      <div class="loading-text">Firebaseに保存中…</div>
+    </div>
+    <div class="err" id="err3" style="display:none;margin-top:8px;"></div>
+  </div>
+
+  <div class="next-btn-wrap">
+    <button class="btn-main teal" onclick="goStep(4)">
+      ストックフォルダへ <svg width="18" height="18"><use href="#ico-arrow-r"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ===== STEP4: ストック & B4 ===== -->
+<div class="page" id="step4">
+  <div class="bottom-tabs">
+    <button class="bottom-tab active" id="tabStock" onclick="switchTab('stock')">
+      <svg width="14" height="14"><use href="#ico-folder"/></svg> ストック
+    </button>
+    <button class="bottom-tab" id="tabB4" onclick="switchTab('b4')">
+      <svg width="14" height="14"><use href="#ico-pdf"/></svg> B4レイアウト
+    </button>
+  </div>
+
+  <!-- ストックタブ -->
+  <div id="tabStockContent">
+    <div class="card">
+      <div class="card-label">
+        <svg width="15" height="15" style="color:var(--muted)"><use href="#ico-folder"/></svg>
+        問題ストック
+      </div>
+      <div class="loading" id="ldStock">
+        <div class="spinner"></div>
+        <div class="loading-text">読み込み中…</div>
+      </div>
+      <div class="stock-grid" id="stockGrid"></div>
+      <div class="stock-empty" id="stockEmpty" style="display:none;">
+        まだ問題が保存されていません。<br>STEP3でトリミングして保存してください。
+      </div>
+      <div class="err" id="errStock" style="display:none;margin-top:8px;"></div>
+    </div>
+    <div class="next-btn-wrap">
+      <button class="btn-main teal" onclick="switchTab('b4')" id="btnGoB4" disabled>
+        B4レイアウトへ <svg width="18" height="18"><use href="#ico-arrow-r"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- B4タブ -->
+  <div id="tabB4Content" style="display:none;">
+    <div class="card">
+      <div class="card-label">
+        <svg width="15" height="15" style="color:var(--muted)"><use href="#ico-pdf"/></svg>
+        B4横レイアウト
+      </div>
+      <div id="selectCountMsg" class="select-count" style="display:none;"></div>
+      <div style="font-size:15px;color:var(--muted);margin-bottom:12px;line-height:1.6;">
+        ストックから問題を選んでください。左ページ最大5問・右ページ最大5問。
+      </div>
+
+      <div style="font-size:14px;font-weight:700;color:var(--muted);letter-spacing:1px;margin-bottom:8px;">プレビュー</div>
+      <div class="b4-wrap" id="b4Wrap">
+        <div class="b4-frame" id="b4Frame">
+          <div class="b4-page" id="b4Left">
+            <div class="b4-page-label">LEFT</div>
+          </div>
+          <div class="b4-divider"></div>
+          <div class="b4-page" id="b4Right">
+            <div class="b4-page-label">RIGHT</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="err" id="err4" style="display:none;margin-top:10px;"></div>
+      <button class="btn-main orange" id="btnPDF" onclick="runPDF()" style="margin-top:16px;" disabled>
+        <svg width="18" height="18"><use href="#ico-pdf"/></svg>PDFを作る
+      </button>
+      <div class="loading" id="ld4" style="margin-top:8px;">
+        <div class="spinner"></div>
+        <div class="loading-text">PDF生成中…</div>
+      </div>
+      <div id="pdfResult" style="display:none;margin-top:10px;">
+        <a id="pdfLink" download="fukushuu.pdf">
+          <button class="btn-main green">
+            <svg width="18" height="18"><use href="#ico-dl"/></svg>PDFをダウンロード
+          </button>
+        </a>
       </div>
     </div>
-    <div class="err" id="err3" style="margin-top:10px;"></div>
-    <button class="btn-main orange" id="btnPDF" onclick="runPDF()" style="margin-top:16px;">
-      <svg width="18" height="18"><use href="#ico-pdf"/></svg>PDFを作る
-    </button>
-    <div class="loading" id="ld3" style="margin-top:8px;">
-      <div class="spinner"></div>
-      <div class="loading-text">PDF生成中…</div>
-    </div>
-    <div id="pdfResult" style="display:none;margin-top:10px;">
-      <a id="pdfLink" download="fukushuu.pdf">
-        <button class="btn-main green">
-          <svg width="18" height="18"><use href="#ico-dl"/></svg>PDFをダウンロード
-        </button>
-      </a>
-    </div>
   </div>
+</div>
+
+</div>
 </div>
 
 <div class="app-footer">
   <div class="footer-text">復習プリントメーカー</div>
 </div>
 
-<script>
-const S={
-  key:null,
-  orig:[null,null],origType:[null,null],
-  cropped:[null,null],clean:[null,null],
-  box:[{x:0,y:0,w:0,h:0},{x:0,y:0,w:0,h:0}]
-};
-
-window.onload=()=>{
-  const k=localStorage.getItem('oai_key');
-  if(k){
-    document.getElementById('api-key').value=k;
-    S.key=k;
-    setSt('✓ 保存済み','var(--teal)');
-    showApiSaved(true);
-    // 保存済みなら折りたたんだ状態で開始
-  } else {
-    // 未設定なら最初から開く
-    document.getElementById('apiBody').classList.add('open');
-    document.getElementById('apiChevron').classList.add('open');
-  }
-};
-function saveKey(){
-  const k=document.getElementById('api-key').value.trim();
-  if(!k.startsWith('sk-')){setSt('⚠ sk- で始まるキーを入力してください','#C0391A');return;}
-  localStorage.setItem('oai_key',k);S.key=k;setSt('✓ 保存しました','var(--teal)');
-  showApiSaved(true);
-  setTimeout(()=>{ closeApi(); }, 800);
-}
-function toggleApi(){
-  const body=document.getElementById('apiBody');
-  const chev=document.getElementById('apiChevron');
-  const open=body.classList.toggle('open');
-  chev.classList.toggle('open', open);
-}
-function closeApi(){
-  document.getElementById('apiBody').classList.remove('open');
-  document.getElementById('apiChevron').classList.remove('open');
-}
-function showApiSaved(show){
-  document.getElementById('apiSavedBadge').classList.toggle('show', show);
-}
-function setSt(m,c){const e=document.getElementById('api-status');e.textContent=m;e.style.color=c;}
-
-function switchPage(n){
-  document.getElementById('page1').style.display=n===1?'block':'none';
-  document.getElementById('page2').style.display=n===2?'block':'none';
-  document.getElementById('tab1').className='tab'+(n===1?' active':(S.clean[0]?' done':''));
-  document.getElementById('tab2').className='tab'+(n===2?' active':(S.clean[1]?' done':''));
-}
-function showPDF(){
-  document.getElementById('pdfContent').style.display='block';
-  if(S.clean[0])document.getElementById('b4i1').src=S.clean[0];
-  if(S.clean[1])document.getElementById('b4i2').src=S.clean[1];
-  scaleB4();
-  document.getElementById('pdfContent').scrollIntoView({behavior:'smooth'});
-}
-function scaleB4(){
-  const wrap=document.getElementById('b4Wrap');
-  const frame=document.getElementById('b4Frame');
-  const s=wrap.offsetWidth/1000;
-  frame.style.transform=`scale(${s})`;
-  frame.style.transformOrigin='top left';
-  wrap.style.height=(frame.offsetHeight*s)+'px';
-}
-window.addEventListener('resize',scaleB4);
-
-function loadImg(n,e){
-  const file=e.target.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=ev=>{
-    S.orig[n-1]=ev.target.result.split(',')[1];
-    S.origType[n-1]=file.type||'image/jpeg';
-    S.cropped[n-1]=null;
-    const img=document.getElementById(`cropImg${n}`);
-    img.src=ev.target.result;
-    img.onload=()=>{
-      document.getElementById(`up${n}`).classList.add('has');
-      document.getElementById(`cropContainer${n}`).style.display='block';
-      document.getElementById(`cropBtns${n}`).style.display='flex';
-      document.getElementById(`tw${n}`).style.display='none';
-      initBox(n);drawCrop(n);updateBtn(n);
-    };
-  };
-  reader.readAsDataURL(file);
-}
-
-function initBox(n){const img=document.getElementById(`cropImg${n}`);S.box[n-1]={x:0,y:0,w:img.offsetWidth,h:img.offsetHeight};}
-function g(id){return document.getElementById(id);}
-function sty(el,s){if(!el)return;for(const k in s)el.style[k]=s[k]+'px';}
-function drawCrop(n){
-  const b=S.box[n-1];
-  const img=document.getElementById(`cropImg${n}`);
-  const W=img.offsetWidth,H=img.offsetHeight,{x,y,w,h}=b;
-  sty(g(`mt${n}`),{left:0,top:0,width:W,height:y});
-  sty(g(`mb${n}`),{left:0,top:y+h,width:W,height:H-y-h});
-  sty(g(`ml${n}`),{left:0,top:y,width:x,height:h});
-  sty(g(`mr${n}`),{left:x+w,top:y,width:W-x-w,height:h});
-  sty(g(`cb${n}`),{left:x,top:y,width:w,height:h});
-  sty(g(`gv${n}a`),{left:x+w/3,top:y+2,width:1,height:h-4});
-  sty(g(`gv${n}b`),{left:x+w*2/3,top:y+2,width:1,height:h-4});
-  sty(g(`gh${n}a`),{left:x+2,top:y+h/3,width:w-4,height:1});
-  sty(g(`gh${n}b`),{left:x+2,top:y+h*2/3,width:w-4,height:1});
-  const hmap={tl:[x,y],tr:[x+w,y],bl:[x,y+h],br:[x+w,y+h],tm:[x+w/2,y],bm:[x+w/2,y+h],lm:[x,y+h/2],rm:[x+w,y+h/2]};
-  document.querySelectorAll(`.handle[data-n="${n}"]`).forEach(el=>{
-    const [cx,cy]=hmap[el.dataset.h];
-    el.style.left=(cx-22)+'px';el.style.top=(cy-22)+'px';
-  });
-}
-
-let drag=null;
-function getXY(e){return e.touches?{x:e.touches[0].clientX,y:e.touches[0].clientY}:{x:e.clientX,y:e.clientY};}
-document.addEventListener('mousedown',startDrag);
-document.addEventListener('touchstart',startDrag,{passive:false});
-document.addEventListener('mousemove',moveDrag);
-document.addEventListener('touchmove',moveDrag,{passive:false});
-document.addEventListener('mouseup',()=>drag=null);
-document.addEventListener('touchend',()=>drag=null);
-function startDrag(e){
-  const t=e.target.closest('.handle');if(!t)return;
-  e.preventDefault();
-  const n=+t.dataset.n,h=t.dataset.h,{x,y}=getXY(e);
-  drag={n,h,sx:x,sy:y,b:{...S.box[n-1]}};
-}
-function moveDrag(e){
-  if(!drag)return;e.preventDefault();
-  const {x,y}=getXY(e);
-  const dx=x-drag.sx,dy=y-drag.sy;
-  const img=document.getElementById(`cropImg${drag.n}`);
-  const W=img.offsetWidth,H=img.offsetHeight,MIN=30;
-  let {x:bx,y:by,w:bw,h:bh}=drag.b;
-  const h=drag.h;
-  if(h==='tl'||h==='lm'||h==='bl'){const nx=Math.max(0,Math.min(bx+dx,bx+bw-MIN));bw-=(nx-bx);bx=nx;}
-  if(h==='tr'||h==='rm'||h==='br'){bw=Math.max(MIN,Math.min(bw+dx,W-bx));}
-  if(h==='tl'||h==='tm'||h==='tr'){const ny=Math.max(0,Math.min(by+dy,by+bh-MIN));bh-=(ny-by);by=ny;}
-  if(h==='bl'||h==='bm'||h==='br'){bh=Math.max(MIN,Math.min(bh+dy,H-by));}
-  S.box[drag.n-1]={x:bx,y:by,w:bw,h:bh};drawCrop(drag.n);
-}
-function resetCrop(n){initBox(n);drawCrop(n);}
-function applyCrop(n){
-  const b=S.box[n-1];
-  const img=document.getElementById(`cropImg${n}`);
-  const natW=img.naturalWidth,natH=img.naturalHeight;
-  const dW=img.offsetWidth,dH=img.offsetHeight;
-  const canvas=document.createElement('canvas');
-  canvas.width=(b.w/dW)*natW;canvas.height=(b.h/dH)*natH;
-  canvas.getContext('2d').drawImage(img,(b.x/dW)*natW,(b.y/dH)*natH,canvas.width,canvas.height,0,0,canvas.width,canvas.height);
-  const url=canvas.toDataURL('image/jpeg',.95);
-  S.cropped[n-1]=url.split(',')[1];
-  g(`ti${n}`).src=url;
-  g(`tw${n}`).style.display='block';
-  g(`cropContainer${n}`).style.display='none';
-  g(`cropBtns${n}`).style.display='none';
-  updateBtn(n);
-}
-function reCrop(n){
-  g(`tw${n}`).style.display='none';
-  g(`cropContainer${n}`).style.display='block';
-  g(`cropBtns${n}`).style.display='flex';
-  S.cropped[n-1]=null;updateBtn(n);
-}
-function updateBtn(n){g(`btnC${n}`).disabled=!(S.key&&S.orig[n-1]);}
-
-const P1=`このプリント写真を処理してください。目的は「手書き部分を消して、印刷されたプリントを正確に再現すること」です。
-1. 手書きの文字・計算・丸つけ・メモ・線だけを消してください。
-2. 印刷された文字・数字・式・図・罫線・問題番号・単位は残してください。
-3. 画像内にない文字・数字・式・図は補わないでください。
-4. 紙の傾き・影・暗さは補正してください。
-5. 白地はできるだけ白く、印刷線と文字は黒く読みやすくしてください。
-6. 印刷向けの高解像度画像として出力してください。
-【理科】図の位置、数値、単位、ばねばかり、支点、おもりの位置関係を崩さないでください。
-【算数】分数は分子・分母・分数線の位置関係と大きさを崩さないでください。
-まずはこの1枚だけを画像として出力してください。PDFにはしないでください。`;
-
-const P2=`次に、この2枚目も同じ条件で処理してください。
-手書き部分だけを消し、印刷された内容は残してください。画像内にない内容は補わないでください。
-1枚目と並べたときに違和感が出ないよう、白さ・明るさ・線の濃さも合わせてください。
-まだPDFにはしないでください。`;
-
-async function runClean(n){
-  showErr('err'+n,'');
-  g('cr'+n).style.display='none';
-  await _doClean(n, n===1 ? P1 : P2);
-}
-// ② 自動調整プロンプトで再試行
-const RETRY_EXTRA = `
-【前回うまくいかなかった場合の追加指示】
-- 印刷されたテキスト・数字・罫線・図は絶対に消さないでください
-- 手書きかどうか判断が難しい場合は「残す」方向で判断してください
-- 紙の地（白地）部分の復元を最優先にしてください
-- 分数・図・単位など印刷物の構造は崩さないでください
-`;
-
-async function runRetry(n){
-  g('btnRetry'+n).style.display='none';
-  showErr('err'+n,'');
-  // P1/P2にRETRY_EXTRAを追加して再実行
-  const origPrompt = n===1 ? P1 : P2;
-  const retryPrompt = origPrompt + RETRY_EXTRA;
-  await _doClean(n, retryPrompt);
-}
-
-// ③ やり直し指示付き再処理
-async function runRedo(n){
-  const userNote = (g('redoText'+n)?.value||'').trim();
-  const basePrompt = n===1 ? P1 : P2;
-  const redoPrompt = basePrompt + (userNote
-    ? `
-
-【前回の処理への追加指示】
-${userNote}
-この点に特に注意して再処理してください。`
-    : RETRY_EXTRA
-  );
-  g('cr'+n).style.display='none';
-  g('next'+n).style.display='none';
-  showErr('err'+n,'');
-  await _doClean(n, redoPrompt);
-}
-
-// 共通クリーン処理（プロンプトを外から受け取る）
-async function _doClean(n, prompt){
-  if(!S.key){ showErr('err'+n,'APIキーを保存してください'); return; }
-  const b64 = S.cropped[n-1] || S.orig[n-1];
-  g('ld'+n).style.display='block';
-  g('btnC'+n).disabled=true;
-  try{
-    const res=await fetch('https://api.openai.com/v1/chat/completions',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+S.key},
-      body:JSON.stringify({model:'gpt-5.5',max_tokens:4096,messages:[{role:'user',content:[
-        {type:'text',text:prompt},
-        {type:'image_url',image_url:{url:'data:'+S.origType[n-1]+';base64,'+b64,detail:'high'}}
-      ]}]})
-    });
-    if(!res.ok){const e=await res.json();throw new Error(e.error?.message||'HTTP '+res.status);}
-    const data=await res.json();
-    const reply=data.choices[0].message.content;
-    const url=extractImg(reply);
-    if(!url)throw new Error('クリーン画像を取得できませんでした。' + String(reply).substring(0,200));
-    S.clean[n-1]=url;
-    g('ci'+n).src=url;
-    g('cr'+n).style.display='block';
-    g('next'+n).style.display='block';
-    g('tab'+n).className='tab done';
-    // やり直し入力欄をリセット
-    if(g('redoText'+n)) g('redoText'+n).value='';
-  }catch(e){
-    showErr('err'+n, e.message);
-  }finally{
-    g('ld'+n).style.display='none';
-    g('btnC'+n).disabled=false;
-  }
-}
-
-function extractImg(c){
-  if(typeof c==='string'){
-    const m=c.match(/data:image\/[^;]+;base64,[A-Za-z0-9+/=]+/);if(m)return m[0];
-    const u=c.match(/https?:\/\/\S+\.(png|jpg|jpeg|webp)/i);if(u)return u[0];
-  }
-  if(Array.isArray(c)){for(const x of c)if(x.type==='image_url')return x.image_url?.url;}
-  return null;
-}
-
-async function runPDF(){
-  if(!S.clean[0]){showErr('err3','1枚目のクリーン画像がありません');return;}
-  showErr('err3','');
-  g('ld3').style.display='block';
-  g('btnPDF').disabled=true;
-  g('pdfResult').style.display='none';
-  try{
-    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
-    const {jsPDF}=window.jspdf;
-    const pdf=new jsPDF({orientation:'landscape',unit:'mm',format:'b4'});
-    const PW=364,PH=257,pad=4;
-    const imgs=[S.clean[0],S.clean[1]].filter(Boolean);
-    const colW=(PW-pad*(imgs.length+1))/imgs.length;
-    for(let i=0;i<imgs.length;i++){
-      const el=await loadImgEl(imgs[i]);
-      const aspect=el.naturalHeight/el.naturalWidth;
-      const iw=colW,ih=Math.min(colW*aspect,PH-pad*2);
-      const x=pad+i*(colW+pad),y=pad+(PH-pad*2-ih)/2;
-      pdf.addImage(imgs[i],imgs[i].startsWith('data:image/png')?'PNG':'JPEG',x,y,iw,ih);
-    }
-    g('pdfLink').href=URL.createObjectURL(pdf.output('blob'));
-    g('pdfResult').style.display='block';
-  }catch(e){showErr('err3',e.message);}
-  finally{g('ld3').style.display='none';g('btnPDF').disabled=false;}
-}
-function loadImgEl(src){return new Promise((res,rej)=>{const i=new Image();i.crossOrigin='anonymous';i.onload=()=>res(i);i.onerror=rej;i.src=src;});}
-function loadScript(src){return new Promise((res,rej)=>{if(document.querySelector(`script[src="${src}"]`)){res();return;}const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=rej;document.head.appendChild(s);});}
-function showErr(id,msg){
-  const e=g(id);
-  e.style.display=msg?'flex':'none';
-  e.textContent=msg;
-  // エラーがあればretryボタンを表示
-  const n=id.replace('err','');
-  const retry=g('btnRetry'+n);
-  if(retry) retry.style.display=msg?'flex':'none';
-}
-</script>
-
-
 <!-- ガイドオーバーレイ -->
 <div class="guide-overlay" id="guideOverlay" onclick="closeGuide()"></div>
-
-<!-- ガイドパネル -->
 <div class="guide-panel" id="guidePanel">
   <div class="guide-header">
     <button class="guide-close" onclick="closeGuide()">✕</button>
@@ -1097,117 +567,631 @@ function showErr(id,msg){
   </div>
   <div class="guide-chevron"></div>
   <div class="guide-content">
-
-    <div class="g-section-title">特徴</div>
-    <div class="g-card">
-      <div class="g-feature">
-        <div class="g-ficon">✂️</div>
-        <div class="g-ftext">
-          <h3>手書きだけを消す</h3>
-          <p>GPT-4oが印刷文字・図・罫線はそのままに、手書き・丸つけ・計算メモだけを除去します。</p>
-        </div>
-      </div>
-      <div class="g-feature">
-        <div class="g-ficon orange">📄</div>
-        <div class="g-ftext">
-          <h3>B4横PDFで出力</h3>
-          <p>表・裏2枚を左右に並べてB4横PDFに自動レイアウト。そのまま印刷できます。</p>
-        </div>
-      </div>
-      <div class="g-feature">
-        <div class="g-ficon gray">🔄</div>
-        <div class="g-ftext">
-          <h3>やり直し・再指示に対応</h3>
-          <p>うまくいかないときはワンタップで自動再試行。追加指示して再処理もできます。</p>
-        </div>
-      </div>
-      <div class="g-feature">
-        <div class="g-ficon blue">📱</div>
-        <div class="g-ftext">
-          <h3>全デバイス対応</h3>
-          <p>iPhone SE3・iPhone 16・iPadで最適表示。カメラ撮影も直接できます。</p>
-        </div>
-      </div>
-    </div>
-
     <div class="g-section-title">使い方</div>
     <div class="g-card">
-      <div class="g-step">
-        <div class="g-snum">1</div>
-        <div class="g-sbody">
-          <h3>APIキーを入力・保存</h3>
-          <p>OpenAIのAPIキー（sk-から始まる）を入力して保存。この端末にのみ保存されます。</p>
-          <div class="g-tip"><strong>取得：</strong> platform.openai.com → API Keys</div>
-        </div>
-      </div>
-      <div class="g-step">
-        <div class="g-snum">2</div>
-        <div class="g-sbody">
-          <h3>写真を撮る・選ぶ</h3>
-          <p>カメラで撮影またはライブラリから選択。プリントが画面いっぱいに収まるように撮ると精度が上がります。</p>
-        </div>
-      </div>
-      <div class="g-step">
-        <div class="g-snum">3</div>
-        <div class="g-sbody">
-          <h3>クロップで範囲を指定</h3>
-          <p>四隅・四辺のハンドルをドラッグしてプリントの範囲だけに切り取ります。</p>
-          <div class="g-tip"><strong>ポイント：</strong> 背景・机が写り込んでいる場合はしっかりクロップすると精度が上がります。</div>
-        </div>
-      </div>
-      <div class="g-step">
-        <div class="g-snum">4</div>
-        <div class="g-sbody">
-          <h3>手書きを消す</h3>
-          <p>GPT-4oが処理します（10〜20秒）。うまくいかない場合は自動再試行または追加指示で再処理できます。</p>
-        </div>
-      </div>
-      <div class="g-step">
-        <div class="g-snum">5</div>
-        <div class="g-sbody">
-          <h3>2枚目も同様に処理</h3>
-          <p>「2枚目へ進む」をタップして同じ手順で処理します。</p>
-        </div>
-      </div>
-      <div class="g-step">
-        <div class="g-snum">6</div>
-        <div class="g-sbody">
-          <h3>B4横PDFを生成・ダウンロード</h3>
-          <p>「PDF作成へ進む」→「PDFを作る」でダウンロード。用紙サイズB4横・用紙に合わせるで印刷してください。</p>
-        </div>
-      </div>
+      <div class="g-step"><div class="g-snum">1</div><div class="g-sbody"><h3>モードを選ぶ</h3><p>手書きがある場合は「手書きを消してからトリミング」、バツ印だけの場合は「そのままトリミング」。</p></div></div>
+      <div class="g-step"><div class="g-snum">2</div><div class="g-sbody"><h3>写真を撮る・クリーン化</h3><p>プリントを撮影し、AIで手書きを消去します。明るさ・傾きも自動補正。</p></div></div>
+      <div class="g-step"><div class="g-snum">3</div><div class="g-sbody"><h3>問題をトリミング</h3><p>クリーン画像上をドラッグして問題の範囲を選択。ラベル名を付けてストックに保存。</p></div></div>
+      <div class="g-step"><div class="g-snum">4</div><div class="g-sbody"><h3>B4でまとめて印刷</h3><p>ストックから問題を選んでB4横PDFに配置→ダウンロード→印刷。</p></div></div>
     </div>
-
-    <div class="g-section-title">料金の目安</div>
-    <div class="g-card">
-      <div class="g-cost"><span>画像1枚の処理</span><span class="val">約0.3〜0.7円</span></div>
-      <div class="g-cost"><span>表裏2枚の処理</span><span class="val">約0.6〜1.4円</span></div>
-      <div class="g-cost"><span>1日10枚・月換算</span><span class="val">月200〜400円程度</span></div>
-      <p style="font-size:15px;color:var(--muted);margin-top:8px;line-height:1.5;">※ 再試行のたびに1回分の費用が発生します。</p>
-    </div>
-
     <div class="g-section-title">注意事項</div>
     <div class="g-card">
-      <div class="g-note"><div class="g-ndot"></div><div>APIキーは自分だけが使う端末でご利用ください。</div></div>
-      <div class="g-note"><div class="g-ndot"></div><div>手書きが多い・重なりが複雑な場合は精度が下がることがあります。</div></div>
-      <div class="g-note"><div class="g-ndot"></div><div>処理画像はOpenAIのサーバーに送信されます。個人情報が含まれるプリントはご注意ください。</div></div>
+      <div class="g-warning"><strong>⚠️ 写真には氏名・住所・マイナンバーなどが写らないよう注意してください！</strong></div>
+      <div class="g-note"><div class="g-ndot"></div><div>処理画像はOpenAIのサーバーに送信されます。</div></div>
+      <div class="g-note"><div class="g-ndot"></div><div>ストック画像はFirebase（Google）のサーバーに保存されます。</div></div>
       <div class="g-note"><div class="g-ndot"></div><div>インターネット接続が必要です。</div></div>
     </div>
-
   </div>
 </div>
 
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, orderBy, query } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+import { getStorage, ref, uploadString, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-storage.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyATr8KkwLIXNJIhgivQKslQDthnoay-0sE",
+  authDomain: "print-maker-e48a0.firebaseapp.com",
+  projectId: "print-maker-e48a0",
+  storageBucket: "print-maker-e48a0.firebasestorage.app",
+  messagingSenderId: "501480577432",
+  appId: "1:501480577432:web:49803608e3347201a4f3ed"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+const storage = getStorage(app);
+
+// グローバルに公開
+window._db = db;
+window._storage = storage;
+window._fbFns = { collection, addDoc, getDocs, deleteDoc, doc, orderBy, query, ref, uploadString, getDownloadURL, deleteObject };
+window._firebaseReady = true;
+window.dispatchEvent(new Event('firebaseReady'));
+</script>
+
 <script>
-function openGuide(){
-  document.getElementById('guideOverlay').classList.add('open');
-  document.getElementById('guidePanel').classList.add('open');
-  document.body.style.overflow='hidden';
+// ===== 状態 =====
+const S = {
+  mode: 'A',
+  origB64: null, origType: null,
+  croppedB64: null,
+  cleanB64: null,
+  box: {x:0,y:0,w:0,h:0},
+  regions: [],       // [{id,label,b64,date}]
+  stockItems: [],    // Firestoreから読んだもの
+  selectedIds: [],   // B4に選んだID（順番）
+};
+
+// ===== APIキー =====
+window.onload = () => {
+  const k = localStorage.getItem('oai_key');
+  if(k){ document.getElementById('api-key').value=k; S.key=k; setSt('✓ 保存済み','var(--teal)'); showApiSaved(true); }
+  else { document.getElementById('apiBody').classList.add('open'); document.getElementById('apiChevron').classList.add('open'); }
+  // Firebase準備後にストック読込
+  if(window._firebaseReady) loadStock();
+  else window.addEventListener('firebaseReady', loadStock);
+};
+function saveKey(){ const k=document.getElementById('api-key').value.trim(); if(!k.startsWith('sk-')){setSt('⚠ sk-で始まるキーを入力','#C0391A');return;} localStorage.setItem('oai_key',k);S.key=k;setSt('✓ 保存しました','var(--teal)');showApiSaved(true);setTimeout(closeApi,800); }
+function toggleApi(){ const b=document.getElementById('apiBody'),c=document.getElementById('apiChevron'),o=b.classList.toggle('open');c.classList.toggle('open',o); }
+function closeApi(){ document.getElementById('apiBody').classList.remove('open');document.getElementById('apiChevron').classList.remove('open'); }
+function showApiSaved(s){ document.getElementById('apiSavedBadge').classList.toggle('show',s); }
+function setSt(m,c){ const e=document.getElementById('api-status');e.textContent=m;e.style.color=c; }
+
+// ===== モード選択 =====
+function selectMode(m){
+  S.mode = m;
+  ['A','B'].forEach(x=>{
+    document.getElementById('mode'+x).classList.toggle('selected', x===m);
+    document.getElementById('radio'+x).classList.toggle('checked', x===m);
+  });
 }
-function closeGuide(){
-  document.getElementById('guideOverlay').classList.remove('open');
-  document.getElementById('guidePanel').classList.remove('open');
-  document.body.style.overflow='';
+
+// ===== ステップ管理 =====
+function goStep(n){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('step'+n).classList.add('active');
+  updateStepUI(n);
+  // step2に来たときモードに応じてUIを調整
+  if(n===2) setupStep2();
+  if(n===3) setupStep3();
+  if(n===4) { loadStock(); switchTab('stock'); }
+  window.scrollTo({top:0,behavior:'smooth'});
 }
+function updateStepUI(n){
+  for(let i=1;i<=4;i++){
+    const dot=document.getElementById('sd'+i);
+    if(i<n){ dot.className='step-dot done'; }
+    else if(i===n){ dot.className='step-dot active'; }
+    else{ dot.className='step-dot'; }
+    if(i<4){ document.getElementById('sl'+i).classList.toggle('done', i<n); }
+  }
+}
+function setupStep2(){
+  if(S.mode==='B'){
+    document.getElementById('cleanCardTitle').textContent='明るさ・補正';
+    document.getElementById('btnCleanLabel').textContent='補正する';
+  } else {
+    document.getElementById('cleanCardTitle').textContent='手書きを消す';
+    document.getElementById('btnCleanLabel').textContent='手書きを消す';
+  }
+}
+function setupStep3(){
+  const src = S.cleanB64 ? 'data:'+S.origType+';base64,'+S.cleanB64 : (S.croppedB64 ? 'data:image/jpeg;base64,'+S.croppedB64 : null);
+  if(!src) return;
+  const img = document.getElementById('multiCropImg');
+  img.src = src;
+  img.onload = () => { initMultiCrop(); };
+}
+
+// ===== 画像読込・クロップ =====
+function loadImg(e){
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    S.origB64=ev.target.result.split(',')[1];
+    S.origType=file.type||'image/jpeg';
+    S.croppedB64=null; S.cleanB64=null;
+    const img=document.getElementById('cropImg');
+    img.src=ev.target.result;
+    img.onload=()=>{
+      document.getElementById('upArea').classList.add('has');
+      document.getElementById('cropContainer').style.display='block';
+      document.getElementById('cropBtns').style.display='flex';
+      document.getElementById('thumbWrap').style.display='none';
+      document.getElementById('cr2').style.display='none';
+      document.getElementById('next2').style.display='none';
+      initBox(); drawCrop(); updateCleanBtn();
+    };
+  };
+  reader.readAsDataURL(file);
+}
+function initBox(){ const img=document.getElementById('cropImg'); S.box={x:0,y:0,w:img.offsetWidth,h:img.offsetHeight}; }
+const g=id=>document.getElementById(id);
+function sty(el,s){ if(!el)return; for(const k in s)el.style[k]=s[k]+'px'; }
+function drawCrop(){
+  const b=S.box, img=g('cropImg'), W=img.offsetWidth, H=img.offsetHeight, {x,y,w,h}=b;
+  sty(g('mt'),{left:0,top:0,width:W,height:y});
+  sty(g('mb'),{left:0,top:y+h,width:W,height:H-y-h});
+  sty(g('ml'),{left:0,top:y,width:x,height:h});
+  sty(g('mr'),{left:x+w,top:y,width:W-x-w,height:h});
+  sty(g('cb'),{left:x,top:y,width:w,height:h});
+  sty(g('gva'),{left:x+w/3,top:y+2,width:1,height:h-4});
+  sty(g('gvb'),{left:x+w*2/3,top:y+2,width:1,height:h-4});
+  sty(g('gha'),{left:x+2,top:y+h/3,width:w-4,height:1});
+  sty(g('ghb'),{left:x+2,top:y+h*2/3,width:w-4,height:1});
+  const hmap={tl:[x,y],tr:[x+w,y],bl:[x,y+h],br:[x+w,y+h],tm:[x+w/2,y],bm:[x+w/2,y+h],lm:[x,y+h/2],rm:[x+w,y+h/2]};
+  document.querySelectorAll('.handle').forEach(el=>{ const [cx,cy]=hmap[el.dataset.h]; el.style.left=(cx-22)+'px'; el.style.top=(cy-22)+'px'; });
+}
+let drag=null;
+function getXY(e){ return e.touches?{x:e.touches[0].clientX,y:e.touches[0].clientY}:{x:e.clientX,y:e.clientY}; }
+document.addEventListener('mousedown',startDrag);
+document.addEventListener('touchstart',startDrag,{passive:false});
+document.addEventListener('mousemove',moveDrag);
+document.addEventListener('touchmove',moveDrag,{passive:false});
+document.addEventListener('mouseup',()=>drag=null);
+document.addEventListener('touchend',()=>drag=null);
+function startDrag(e){
+  const t=e.target.closest('.handle'); if(!t||t.closest('#multiCropContainer')) return;
+  e.preventDefault();
+  const h=t.dataset.h, {x,y}=getXY(e);
+  drag={h,sx:x,sy:y,b:{...S.box}};
+}
+function moveDrag(e){
+  if(!drag)return; e.preventDefault();
+  const {x,y}=getXY(e), dx=x-drag.sx, dy=y-drag.sy;
+  const img=g('cropImg'), W=img.offsetWidth, H=img.offsetHeight, MIN=30;
+  let {x:bx,y:by,w:bw,h:bh}=drag.b, h=drag.h;
+  if(h==='tl'||h==='lm'||h==='bl'){const nx=Math.max(0,Math.min(bx+dx,bx+bw-MIN));bw-=(nx-bx);bx=nx;}
+  if(h==='tr'||h==='rm'||h==='br'){bw=Math.max(MIN,Math.min(bw+dx,W-bx));}
+  if(h==='tl'||h==='tm'||h==='tr'){const ny=Math.max(0,Math.min(by+dy,by+bh-MIN));bh-=(ny-by);by=ny;}
+  if(h==='bl'||h==='bm'||h==='br'){bh=Math.max(MIN,Math.min(bh+dy,H-by));}
+  S.box={x:bx,y:by,w:bw,h:bh}; drawCrop();
+}
+function resetCrop(){ initBox(); drawCrop(); }
+function applyCrop(){
+  const b=S.box, img=g('cropImg');
+  const natW=img.naturalWidth, natH=img.naturalHeight, dW=img.offsetWidth, dH=img.offsetHeight;
+  const canvas=document.createElement('canvas');
+  canvas.width=(b.w/dW)*natW; canvas.height=(b.h/dH)*natH;
+  canvas.getContext('2d').drawImage(img,(b.x/dW)*natW,(b.y/dH)*natH,canvas.width,canvas.height,0,0,canvas.width,canvas.height);
+  const url=canvas.toDataURL('image/jpeg',.95);
+  S.croppedB64=url.split(',')[1];
+  g('thumbImg').src=url;
+  g('thumbWrap').style.display='block';
+  g('cropContainer').style.display='none';
+  g('cropBtns').style.display='none';
+  updateCleanBtn();
+}
+function reCrop(){
+  g('thumbWrap').style.display='none';
+  g('cropContainer').style.display='block';
+  g('cropBtns').style.display='flex';
+  S.croppedB64=null; updateCleanBtn();
+}
+function updateCleanBtn(){ g('btnClean').disabled=!(S.key&&S.origB64); }
+
+// ===== GPT処理 =====
+const P_CLEAN = `このプリント写真を処理してください。目的は「手書き部分を消して、印刷されたプリントを正確に再現すること」です。
+1. 手書きの文字・計算・丸つけ・メモ・線だけを消してください。
+2. 印刷された文字・数字・式・図・罫線・問題番号・単位は残してください。
+3. 画像内にない文字・数字・式・図は補わないでください。
+4. 紙の傾き・影・暗さは補正してください。
+5. 白地はできるだけ白く、印刷線と文字は黒く読みやすくしてください。
+6. 印刷向けの高解像度画像として出力してください。
+【理科】図の位置、数値、単位、位置関係を崩さないでください。
+【算数】分数は分子・分母・分数線の位置関係と大きさを崩さないでください。
+画像として出力してください。PDFにはしないでください。`;
+
+const P_BRIGHTEN = `このプリント写真を補正してください。
+1. 紙の傾き・影・暗さを補正してください。
+2. 白地はできるだけ白く、印刷線と文字は黒く読みやすくしてください。
+3. 印刷向けの高解像度画像として出力してください。
+画像として出力してください。PDFにはしないでください。`;
+
+const RETRY_EXTRA = `\n【前回うまくいかなかった場合の追加指示】\n- 印刷されたテキスト・数字・罫線・図は絶対に消さないでください\n- 手書きかどうか判断が難しい場合は「残す」方向で判断してください\n- 紙の地（白地）部分の復元を最優先にしてください`;
+
+async function runClean(){
+  const prompt = S.mode==='A' ? P_CLEAN : P_BRIGHTEN;
+  await _doClean(prompt);
+}
+async function runRetry(){
+  g('btnRetry2').style.display='none';
+  const basePrompt = S.mode==='A' ? P_CLEAN : P_BRIGHTEN;
+  await _doClean(basePrompt + RETRY_EXTRA);
+}
+async function runRedo(){
+  const note=(g('redoText')?.value||'').trim();
+  const basePrompt = S.mode==='A' ? P_CLEAN : P_BRIGHTEN;
+  const prompt = basePrompt + (note ? `\n\n【前回の処理への追加指示】\n${note}\nこの点に特に注意して再処理してください。` : RETRY_EXTRA);
+  g('cr2').style.display='none';
+  g('next2').style.display='none';
+  await _doClean(prompt);
+}
+async function _doClean(prompt){
+  if(!S.key){ showErr('err2','APIキーを保存してください'); return; }
+  const b64 = S.croppedB64 || S.origB64;
+  showErr('err2','');
+  g('ld2').style.display='block';
+  g('btnClean').disabled=true;
+  g('btnRetry2').style.display='none';
+  try{
+    const res=await fetch('https://api.openai.com/v1/chat/completions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+S.key},
+      body:JSON.stringify({model:'gpt-5.5',max_tokens:4096,messages:[{role:'user',content:[
+        {type:'text',text:prompt},
+        {type:'image_url',image_url:{url:'data:'+S.origType+';base64,'+b64,detail:'high'}}
+      ]}]})
+    });
+    if(!res.ok){const e=await res.json();throw new Error(e.error?.message||'HTTP '+res.status);}
+    const data=await res.json();
+    const reply=data.choices[0].message.content;
+    const url=extractImg(reply);
+    if(!url) throw new Error('クリーン画像を取得できませんでした。');
+    // base64に変換して保存
+    if(url.startsWith('data:')){
+      S.cleanB64=url.split(',')[1];
+    } else {
+      // URL形式の場合はfetchしてbase64に
+      const r=await fetch(url);
+      const blob=await r.blob();
+      S.cleanB64=await new Promise(res=>{const fr=new FileReader();fr.onload=e=>res(e.target.result.split(',')[1]);fr.readAsDataURL(blob);});
+    }
+    g('ci2').src='data:image/jpeg;base64,'+S.cleanB64;
+    g('cr2').style.display='block';
+    g('next2').style.display='block';
+    g('redoText').value='';
+  }catch(e){
+    showErr('err2',e.message);
+    g('btnRetry2').style.display='flex';
+  }finally{
+    g('ld2').style.display='none';
+    g('btnClean').disabled=false;
+  }
+}
+function extractImg(c){
+  if(typeof c==='string'){
+    const m=c.match(/data:image\/[^;]+;base64,[A-Za-z0-9+/=]+/); if(m)return m[0];
+    const u=c.match(/https?:\/\/\S+\.(png|jpg|jpeg|webp)/i); if(u)return u[0];
+  }
+  if(Array.isArray(c)){ for(const x of c)if(x.type==='image_url')return x.image_url?.url; }
+  return null;
+}
+
+// ===== 複数トリミング =====
+let multiDrag=null, regionIdCounter=0;
+
+function initMultiCrop(){
+  const cont=g('multiCropContainer');
+  cont.addEventListener('mousedown', mcStart);
+  cont.addEventListener('touchstart', mcStart, {passive:false});
+  document.addEventListener('mousemove', mcMove);
+  document.addEventListener('touchmove', mcMove, {passive:false});
+  document.addEventListener('mouseup', mcEnd);
+  document.addEventListener('touchend', mcEnd);
+}
+function getContXY(e, cont){
+  const rect=cont.getBoundingClientRect();
+  const pt=e.touches?e.touches[0]:e;
+  return {x:pt.clientX-rect.left, y:pt.clientY-rect.top};
+}
+function mcStart(e){
+  e.preventDefault();
+  const cont=g('multiCropContainer');
+  const {x,y}=getContXY(e,cont);
+  multiDrag={sx:x,sy:y,ex:x,ey:y};
+  const dr=g('drawingRect');
+  dr.style.display='block';
+  dr.style.left=x+'px'; dr.style.top=y+'px';
+  dr.style.width='0px'; dr.style.height='0px';
+}
+function mcMove(e){
+  if(!multiDrag)return; e.preventDefault();
+  const cont=g('multiCropContainer');
+  const {x,y}=getContXY(e,cont);
+  multiDrag.ex=x; multiDrag.ey=y;
+  const dr=g('drawingRect');
+  const lx=Math.min(multiDrag.sx,x), ly=Math.min(multiDrag.sy,y);
+  const w=Math.abs(x-multiDrag.sx), h=Math.abs(y-multiDrag.sy);
+  dr.style.left=lx+'px'; dr.style.top=ly+'px';
+  dr.style.width=w+'px'; dr.style.height=h+'px';
+}
+function mcEnd(e){
+  if(!multiDrag)return;
+  const dr=g('drawingRect');
+  dr.style.display='none';
+  const w=Math.abs(multiDrag.ex-multiDrag.sx);
+  const h=Math.abs(multiDrag.ey-multiDrag.sy);
+  if(w<20||h<20){ multiDrag=null; return; }
+  // 確定
+  const cont=g('multiCropContainer');
+  const img=g('multiCropImg');
+  const dispW=img.offsetWidth, dispH=img.offsetHeight;
+  const natW=img.naturalWidth, natH=img.naturalHeight;
+  const lx=Math.min(multiDrag.sx,multiDrag.ex);
+  const ly=Math.min(multiDrag.sy,multiDrag.ey);
+  // canvas切り出し
+  const canvas=document.createElement('canvas');
+  canvas.width=(w/dispW)*natW; canvas.height=(h/dispH)*natH;
+  canvas.getContext('2d').drawImage(img,(lx/dispW)*natW,(ly/dispH)*natH,canvas.width,canvas.height,0,0,canvas.width,canvas.height);
+  const b64=canvas.toDataURL('image/jpeg',.95).split(',')[1];
+  // 日付
+  const now=new Date();
+  const yy=String(now.getFullYear()).slice(-2);
+  const mm=String(now.getMonth()+1).padStart(2,'0');
+  const dd=String(now.getDate()).padStart(2,'0');
+  const dateStr=`${yy}${mm}${dd}`;
+  const id='r'+(++regionIdCounter);
+  S.regions.push({id, label:'', b64, date:dateStr, lx, ly, w, h});
+  renderRegionBoxes();
+  renderRegionList();
+  multiDrag=null;
+}
+function renderRegionBoxes(){
+  // 既存ボックスを削除
+  g('multiCropContainer').querySelectorAll('.region-box').forEach(el=>el.remove());
+  const img=g('multiCropImg');
+  S.regions.forEach((r,i)=>{
+    const box=document.createElement('div');
+    box.className='region-box';
+    box.style.left=r.lx+'px'; box.style.top=r.ly+'px';
+    box.style.width=r.w+'px'; box.style.height=r.h+'px';
+    const lbl=document.createElement('div');
+    lbl.className='region-label';
+    lbl.textContent=(i+1)+'. '+(r.label||'未入力');
+    box.appendChild(lbl);
+    g('multiCropContainer').appendChild(box);
+  });
+}
+function renderRegionList(){
+  const list=g('regionList');
+  list.innerHTML='';
+  S.regions.forEach((r,i)=>{
+    const item=document.createElement('div');
+    item.className='region-item';
+    item.innerHTML=`
+      <img class="region-thumb" src="data:image/jpeg;base64,${r.b64}">
+      <div class="region-item-body">
+        <input class="region-label-input" placeholder="ラベル名（例：算数3番）" value="${r.label}" oninput="updateLabel('${r.id}',this.value)">
+        <div class="region-date">_${r.date}</div>
+      </div>
+      <button class="btn-region-del" onclick="deleteRegion('${r.id}')">✕</button>
+    `;
+    list.appendChild(item);
+  });
+  g('regionListCard').style.display=S.regions.length?'block':'none';
+  g('btnSaveStock').disabled=S.regions.length===0||S.regions.some(r=>!r.label);
+}
+function updateLabel(id, val){
+  const r=S.regions.find(r=>r.id===id);
+  if(r){ r.label=val; renderRegionBoxes(); }
+  g('btnSaveStock').disabled=S.regions.length===0||S.regions.some(r=>!r.label);
+}
+function deleteRegion(id){
+  S.regions=S.regions.filter(r=>r.id!==id);
+  renderRegionBoxes(); renderRegionList();
+}
+
+// ===== Firebase保存 =====
+async function saveToStock(){
+  if(!window._firebaseReady){ showErr('err3','Firebase未接続'); return; }
+  g('btnSaveStock').disabled=true;
+  g('ld3').style.display='block';
+  showErr('err3','');
+  try{
+    const {ref, uploadString, getDownloadURL, collection, addDoc} = window._fbFns;
+    const db=window._db, storage=window._storage;
+    for(const r of S.regions){
+      // Storage にアップロード
+      const fileName=`problems/${r.date}_${r.label}_${Date.now()}.jpg`;
+      const storageRef=ref(storage, fileName);
+      await uploadString(storageRef, r.b64, 'base64', {contentType:'image/jpeg'});
+      const url=await getDownloadURL(storageRef);
+      // Firestore に保存
+      await addDoc(collection(db,'problems'),{
+        label: r.label,
+        date: r.date,
+        fileName: fileName,
+        imageUrl: url,
+        createdAt: Date.now()
+      });
+    }
+    S.regions=[];
+    renderRegionBoxes(); renderRegionList();
+    alert(`${S.regions.length===0?'保存完了！':''}ストックに保存しました。`);
+    // ストックを再読込
+    loadStock();
+  }catch(e){
+    showErr('err3','保存エラー: '+e.message);
+  }finally{
+    g('ld3').style.display='none';
+    g('btnSaveStock').disabled=false;
+  }
+}
+
+// ===== ストック読込 =====
+async function loadStock(){
+  if(!window._firebaseReady) return;
+  g('ldStock').style.display='block';
+  g('stockGrid').innerHTML='';
+  showErr('errStock','');
+  try{
+    const {collection, getDocs, query, orderBy} = window._fbFns;
+    const db=window._db;
+    const q=query(collection(db,'problems'), orderBy('createdAt','desc'));
+    const snap=await getDocs(q);
+    S.stockItems=[];
+    snap.forEach(doc=>{ S.stockItems.push({id:doc.id, ...doc.data()}); });
+    renderStockGrid();
+  }catch(e){
+    showErr('errStock','読込エラー: '+e.message);
+  }finally{
+    g('ldStock').style.display='none';
+  }
+}
+function renderStockGrid(){
+  const grid=g('stockGrid');
+  grid.innerHTML='';
+  if(S.stockItems.length===0){ g('stockEmpty').style.display='block'; return; }
+  g('stockEmpty').style.display='none';
+  S.stockItems.forEach(item=>{
+    const el=document.createElement('div');
+    el.className='stock-item'+(S.selectedIds.includes(item.id)?' selected':'');
+    el.innerHTML=`
+      <button class="btn-stock-del" onclick="deleteStockItem('${item.id}','${item.fileName}',event)">
+        <svg width="12" height="12"><use href="#ico-trash"/></svg>
+      </button>
+      <img src="${item.imageUrl}" loading="lazy">
+      <div class="stock-item-body">
+        <div class="stock-item-name">${item.label}</div>
+        <div class="stock-item-date">_${item.date}</div>
+      </div>
+      <div class="stock-badge">${S.selectedIds.indexOf(item.id)+1||''}</div>
+    `;
+    el.addEventListener('click', ()=>toggleSelect(item.id));
+    grid.appendChild(el);
+  });
+  updateGoB4Btn();
+}
+function toggleSelect(id){
+  const idx=S.selectedIds.indexOf(id);
+  if(idx>=0){ S.selectedIds.splice(idx,1); }
+  else if(S.selectedIds.length<10){ S.selectedIds.push(id); }
+  renderStockGrid();
+  updateB4Preview();
+}
+function updateGoB4Btn(){
+  g('btnGoB4').disabled=S.selectedIds.length===0;
+}
+async function deleteStockItem(id, fileName, e){
+  e.stopPropagation();
+  if(!confirm('このアイテムを削除しますか？'))return;
+  try{
+    const {ref, deleteObject, deleteDoc, doc} = window._fbFns;
+    await deleteObject(ref(window._storage, fileName));
+    await deleteDoc(doc(window._db,'problems',id));
+    S.selectedIds=S.selectedIds.filter(x=>x!==id);
+    loadStock();
+  }catch(err){ alert('削除エラー: '+err.message); }
+}
+
+// ===== B4プレビュー =====
+function updateB4Preview(){
+  const leftIds=S.selectedIds.slice(0,5);
+  const rightIds=S.selectedIds.slice(5,10);
+  renderB4Page('b4Left', leftIds, 'LEFT');
+  renderB4Page('b4Right', rightIds, 'RIGHT');
+  g('btnPDF').disabled=S.selectedIds.length===0;
+  const cnt=S.selectedIds.length;
+  if(cnt>0){
+    g('selectCountMsg').style.display='block';
+    g('selectCountMsg').textContent=`${cnt}問選択中（左${leftIds.length}問・右${rightIds.length}問）`;
+  } else {
+    g('selectCountMsg').style.display='none';
+  }
+  scaleB4();
+}
+function renderB4Page(elId, ids, label){
+  const page=g(elId);
+  page.innerHTML=`<div class="b4-page-label">${label}</div>`;
+  if(ids.length===0){
+    const empty=document.createElement('div');
+    empty.style.cssText='flex:1;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:13px;';
+    empty.textContent='問題を選択';
+    page.appendChild(empty);
+    return;
+  }
+  ids.forEach(id=>{
+    const item=S.stockItems.find(x=>x.id===id);
+    if(!item)return;
+    const slot=document.createElement('div');
+    slot.className='b4-slot';
+    const img=document.createElement('img');
+    img.src=item.imageUrl;
+    slot.appendChild(img);
+    page.appendChild(slot);
+  });
+}
+function scaleB4(){
+  const wrap=g('b4Wrap'), frame=g('b4Frame');
+  if(!wrap||!frame)return;
+  const s=wrap.offsetWidth/1000;
+  frame.style.transform=`scale(${s})`;
+  frame.style.transformOrigin='top left';
+  wrap.style.height=(370*s)+'px';
+}
+window.addEventListener('resize',scaleB4);
+
+// ===== PDF生成 =====
+async function runPDF(){
+  if(S.selectedIds.length===0){ showErr('err4','問題を選択してください'); return; }
+  showErr('err4','');
+  g('ld4').style.display='block';
+  g('btnPDF').disabled=true;
+  g('pdfResult').style.display='none';
+  try{
+    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+    const {jsPDF}=window.jspdf;
+    const pdf=new jsPDF({orientation:'landscape',unit:'mm',format:'b4'});
+    const PW=364, PH=257, pad=4;
+    const leftIds=S.selectedIds.slice(0,5);
+    const rightIds=S.selectedIds.slice(5,10);
+    const colW=(PW/2)-pad*2;
+
+    async function drawPage(ids, xOffset){
+      if(ids.length===0) return;
+      const slotH=(PH-pad*2)/ids.length;
+      for(let i=0;i<ids.length;i++){
+        const item=S.stockItems.find(x=>x.id===ids[i]);
+        if(!item)continue;
+        const el=await loadImgEl(item.imageUrl);
+        const aspect=el.naturalHeight/el.naturalWidth;
+        const iw=colW, ih=Math.min(colW*aspect,slotH-pad);
+        const x=xOffset+pad, y=pad+i*slotH+(slotH-ih)/2;
+        const fmt=item.imageUrl.includes('.png')?'PNG':'JPEG';
+        pdf.addImage(el.src, fmt, x, y, iw, ih);
+      }
+    }
+    await drawPage(leftIds, 0);
+    await drawPage(rightIds, PW/2);
+    // 中央線
+    pdf.setDrawColor(200,200,200);
+    pdf.line(PW/2, pad, PW/2, PH-pad);
+    g('pdfLink').href=URL.createObjectURL(pdf.output('blob'));
+    g('pdfResult').style.display='block';
+  }catch(e){ showErr('err4',e.message); }
+  finally{ g('ld4').style.display='none'; g('btnPDF').disabled=false; }
+}
+function loadImgEl(src){ return new Promise((res,rej)=>{ const i=new Image(); i.crossOrigin='anonymous'; i.onload=()=>res(i); i.onerror=rej; i.src=src; }); }
+function loadScript(src){ return new Promise((res,rej)=>{ if(document.querySelector(`script[src="${src}"]`)){res();return;} const s=document.createElement('script'); s.src=src; s.onload=res; s.onerror=rej; document.head.appendChild(s); }); }
+
+// ===== タブ切替 =====
+function switchTab(t){
+  g('tabStockContent').style.display=t==='stock'?'block':'none';
+  g('tabB4Content').style.display=t==='b4'?'block':'none';
+  g('tabStock').classList.toggle('active',t==='stock');
+  g('tabB4').classList.toggle('active',t==='b4');
+  if(t==='b4'){ updateB4Preview(); setTimeout(scaleB4,100); }
+}
+
+// ===== エラー =====
+function showErr(id,msg){ const e=g(id); e.style.display=msg?'block':'none'; e.textContent=msg; }
+
+// ===== ガイド =====
+function openGuide(){ g('guideOverlay').classList.add('open'); g('guidePanel').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeGuide(){ g('guideOverlay').classList.remove('open'); g('guidePanel').classList.remove('open'); document.body.style.overflow=''; }
+
+// グローバル公開
+window.selectMode=selectMode; window.goStep=goStep; window.saveKey=saveKey;
+window.toggleApi=toggleApi; window.loadImg=loadImg; window.resetCrop=resetCrop;
+window.applyCrop=applyCrop; window.reCrop=reCrop; window.runClean=runClean;
+window.runRetry=runRetry; window.runRedo=runRedo; window.saveToStock=saveToStock;
+window.loadStock=loadStock; window.deleteStockItem=deleteStockItem;
+window.toggleSelect=toggleSelect; window.switchTab=switchTab;
+window.runPDF=runPDF; window.openGuide=openGuide; window.closeGuide=closeGuide;
+window.updateLabel=updateLabel; window.deleteRegion=deleteRegion;
 </script>
 </body>
 </html>
