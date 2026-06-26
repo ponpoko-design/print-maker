@@ -419,6 +419,32 @@ body {
 .g-note { display:flex; gap:8px; font-size:16px; line-height:1.6; margin-bottom:7px; }
 .g-note:last-child { margin-bottom:0; }
 .g-ndot { width:5px; height:5px; border-radius:50%; background:var(--orange); flex-shrink:0; margin-top:7px; }
+
+/* ===== APIキー折りたたみ ===== */
+.api-header {
+  display:flex; align-items:center; justify-content:space-between;
+  cursor:pointer; user-select:none;
+}
+.api-header-left { display:flex; align-items:center; gap:8px; font-size:19px; font-weight:700; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; }
+.api-saved-badge {
+  display:none; background:#E8F8F0; border:1px solid #A8DFC0;
+  color:#2A8050; border-radius:99px; font-size:11px; font-weight:700;
+  padding:3px 10px; letter-spacing:0;
+}
+.api-saved-badge.show { display:inline-flex; align-items:center; gap:4px; }
+.api-chevron {
+  width:28px; height:28px; border-radius:50%;
+  background:var(--gray); display:flex; align-items:center; justify-content:center;
+  transition:transform .25s; flex-shrink:0;
+  color:var(--muted);
+}
+.api-chevron.open { transform:rotate(180deg); }
+.api-body {
+  overflow:hidden; max-height:0;
+  transition:max-height .3s ease, opacity .25s ease;
+  opacity:0;
+}
+.api-body.open { max-height:200px; opacity:1; }
 </style>
 
 <!-- SVGアイコン定義 -->
@@ -513,17 +539,28 @@ body {
 <div class="page-container">
 
 <!-- APIキー -->
-<div class="card" style="padding-top:24px;">
-  <div class="card-label">
-    <svg width="15" height="15" style="color:var(--muted)"><use href="#ico-key"/></svg>
-    OpenAI APIキー
+<div class="card" style="padding-top:20px;">
+  <div class="api-header" onclick="toggleApi()">
+    <div class="api-header-left">
+      <svg width="15" height="15" style="color:var(--muted)"><use href="#ico-key"/></svg>
+      OpenAI APIキー
+      <span class="api-saved-badge" id="apiSavedBadge">
+        <svg width="11" height="11" style="color:#2A8050"><use href="#ico-check"/></svg>設定済み
+      </span>
+    </div>
+    <div class="api-chevron" id="apiChevron">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 4 7 10 12 4"/></svg>
+    </div>
   </div>
-  <div class="key-row">
-    <input type="password" id="api-key" placeholder="sk-..." autocomplete="off">
-    <button class="btn-main teal" style="width:auto;flex-shrink:0;padding:12px 18px;font-size:16px;white-space:nowrap;" onclick="saveKey()">保存</button>
+  <div class="api-body" id="apiBody">
+    <div style="height:12px;"></div>
+    <div class="key-row">
+      <input type="password" id="api-key" placeholder="sk-..." autocomplete="off">
+      <button class="btn-main teal" style="width:auto;flex-shrink:0;padding:12px 18px;font-size:16px;white-space:nowrap;" onclick="saveKey()">保存</button>
+    </div>
+    <div class="api-status" id="api-status"></div>
+    <div class="api-note">この端末のブラウザにのみ保存。外部には送信されません。</div>
   </div>
-  <div class="api-status" id="api-status"></div>
-  <div class="api-note">この端末のブラウザにのみ保存。外部には送信されません。</div>
 </div>
 
 <div class="sep"></div>
@@ -755,12 +792,37 @@ const S={
 
 window.onload=()=>{
   const k=localStorage.getItem('oai_key');
-  if(k){document.getElementById('api-key').value=k;S.key=k;setSt('✓ 保存済み','var(--teal)');}
+  if(k){
+    document.getElementById('api-key').value=k;
+    S.key=k;
+    setSt('✓ 保存済み','var(--teal)');
+    showApiSaved(true);
+    // 保存済みなら折りたたんだ状態で開始
+  } else {
+    // 未設定なら最初から開く
+    document.getElementById('apiBody').classList.add('open');
+    document.getElementById('apiChevron').classList.add('open');
+  }
 };
 function saveKey(){
   const k=document.getElementById('api-key').value.trim();
   if(!k.startsWith('sk-')){setSt('⚠ sk- で始まるキーを入力してください','#C0391A');return;}
   localStorage.setItem('oai_key',k);S.key=k;setSt('✓ 保存しました','var(--teal)');
+  showApiSaved(true);
+  setTimeout(()=>{ closeApi(); }, 800);
+}
+function toggleApi(){
+  const body=document.getElementById('apiBody');
+  const chev=document.getElementById('apiChevron');
+  const open=body.classList.toggle('open');
+  chev.classList.toggle('open', open);
+}
+function closeApi(){
+  document.getElementById('apiBody').classList.remove('open');
+  document.getElementById('apiChevron').classList.remove('open');
+}
+function showApiSaved(show){
+  document.getElementById('apiSavedBadge').classList.toggle('show', show);
 }
 function setSt(m,c){const e=document.getElementById('api-status');e.textContent=m;e.style.color=c;}
 
